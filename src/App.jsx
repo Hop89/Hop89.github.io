@@ -1,279 +1,168 @@
-﻿import { useEffect, useMemo, useState } from "react";
-
-const STORAGE_KEY = "independent-study-posts-v1";
-
-const seedPosts = [
+const featuredProjects = [
   {
-    id: "seed-1",
-    title: "Kickoff and goals",
-    date: "2026-01-28",
-    tags: ["planning", "goals"],
-    summary: "Defined the scope, schedule, and first-week focus.",
-    content:
-      "Mapped out weekly themes, picked core resources, and set a simple daily routine.",
+    number: "01",
+    title: "Weather Nowcasting Network",
+    tags: "Distributed sensing · Networking · Full-stack development",
+    description:
+      "A low-cost network of portable weather stations designed to capture hyperlocal conditions and make local weather data more accessible.",
   },
   {
-    id: "seed-2",
-    title: "First practice session",
-    date: "2026-01-27",
-    tags: ["practice", "notes"],
-    summary: "Completed the first hands-on exercise and documented gaps.",
-    content:
-      "Built a tiny prototype, captured what felt confusing, and wrote follow-up questions.",
+    number: "02",
+    title: "Perimeter",
+    tags: "Cybersecurity · Network analysis · Automation",
+    description:
+      "A network security analysis tool that identifies exposed services, highlights potential risks, and organizes findings into a prioritized report.",
+  },
+  {
+    number: "03",
+    title: "Agent Bridge",
+    tags: "Artificial intelligence · Systems control · Reliability",
+    description:
+      "An exploration of how AI systems can interact with software and hardware while preserving safeguards, permissions, and recovery paths.",
   },
 ];
 
-const emptyDraft = {
-  title: "",
-  date: new Date().toISOString().slice(0, 10),
-  tags: "",
-  summary: "",
-  content: "",
-};
+const otherWork = [
+  {
+    title: "Warrior Robotics",
+    description:
+      "FRC programming, autonomous systems, controls, technical leadership, and cross-disciplinary troubleshooting.",
+  },
+  {
+    title: "Homelab",
+    description:
+      "A personal infrastructure environment built around virtualization, containers, networking, storage, and self-hosted services.",
+  },
+  {
+    title: "Hackathons",
+    description:
+      "Rapid prototyping, collaborative development, and presentation-focused software projects built under time constraints.",
+  },
+];
 
-function loadPosts() {
-  const saved = localStorage.getItem(STORAGE_KEY);
-  if (!saved) return seedPosts;
-  try {
-    const parsed = JSON.parse(saved);
-    if (Array.isArray(parsed)) return parsed;
-  } catch (error) {
-    console.error("Failed to parse saved posts", error);
-  }
-  return seedPosts;
-}
-
-function makeId() {
-  if (typeof crypto !== "undefined" && crypto.randomUUID) {
-    return crypto.randomUUID();
-  }
-  return `post-${Date.now()}`;
-}
-
-export default function App() {
-  const [posts, setPosts] = useState(() => loadPosts());
-  const [draft, setDraft] = useState(() => ({ ...emptyDraft }));
-  const [query, setQuery] = useState("");
-  const [showForm, setShowForm] = useState(true);
-
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
-  }, [posts]);
-
-  const filteredPosts = useMemo(() => {
-    const normalized = query.trim().toLowerCase();
-    const list = [...posts].sort((a, b) => b.date.localeCompare(a.date));
-    if (!normalized) return list;
-    return list.filter((post) => {
-      const haystack = [
-        post.title,
-        post.summary,
-        post.content,
-        ...(post.tags || []),
-      ]
-        .join(" ")
-        .toLowerCase();
-      return haystack.includes(normalized);
-    });
-  }, [posts, query]);
-
-  function handleChange(event) {
-    const { name, value } = event.target;
-    setDraft((current) => ({ ...current, [name]: value }));
-  }
-
-  function handleSubmit(event) {
-    event.preventDefault();
-    if (!draft.title.trim() || !draft.content.trim()) return;
-
-    const newPost = {
-      id: makeId(),
-      title: draft.title.trim(),
-      date: draft.date || new Date().toISOString().slice(0, 10),
-      tags: draft.tags
-        .split(",")
-        .map((tag) => tag.trim())
-        .filter(Boolean),
-      summary: draft.summary.trim(),
-      content: draft.content.trim(),
-    };
-
-    setPosts((current) => [newPost, ...current]);
-    setDraft({ ...emptyDraft, date: newPost.date });
-  }
-
-  function removePost(id) {
-    setPosts((current) => current.filter((post) => post.id !== id));
-  }
-
-  function resetPosts() {
-    if (!confirm("Replace your saved posts with the starter examples?")) return;
-    setPosts(seedPosts);
-  }
-
+function App() {
   return (
-    <div className="page">
-      <header className="hero">
-        <div>
-          <p className="eyebrow">Independent Study Log</p>
-          <h1>Track the work. Build the habit.</h1>
-          <p className="subtitle">
-            A lightweight progress journal you can edit directly in the browser.
-            Posts save locally in your browser so you can keep updating your study
-            journey.
-          </p>
-          <div className="hero-actions">
-            <button
-              className="primary"
-              onClick={() => setShowForm((current) => !current)}
-            >
-              {showForm ? "Hide" : "Show"} new entry
-            </button>
-            <button className="ghost" onClick={resetPosts}>
-              Reset demo posts
-            </button>
-          </div>
-        </div>
-        <div className="hero-card">
-          <h2>Weekly focus</h2>
-          <ul>
-            <li>Define 2 outcomes for this week</li>
-            <li>Log your daily wins + blockers</li>
-            <li>Plan the next session before you stop</li>
-          </ul>
-        </div>
+    <div className="site-shell">
+      <header className="site-header">
+        <a className="wordmark" href="#top" aria-label="Grady May home">
+          Grady May
+        </a>
+        <nav className="nav-links" aria-label="Primary navigation">
+          <a href="#projects">Projects</a>
+          <a href="#about">About</a>
+          <a href="#resume">Resume</a>
+          <a href="https://github.com/Hop89" target="_blank" rel="noreferrer">
+            GitHub
+          </a>
+        </nav>
       </header>
 
-      <main className="content">
-        <section className="panel">
-          <div className="panel-head">
-            <div>
-              <h2>New entry</h2>
-              <p>Capture what you studied and what to do next.</p>
-            </div>
-            <span className="pill">Auto-saves in your browser</span>
+      <main id="top">
+        <section className="hero-section">
+          <p className="eyebrow">Student engineer · builder · problem solver</p>
+          <h1>
+            Building across software, hardware, cybersecurity, and AI.
+          </h1>
+          <p className="hero-copy">
+            I am interested in building complete systems: understanding how the
+            pieces work individually, connecting them together, and improving
+            them when something breaks.
+          </p>
+          <div className="hero-actions">
+            <a className="button button-primary" href="#projects">
+              Explore projects
+            </a>
+            <a
+              className="button button-secondary"
+              href="https://github.com/Hop89"
+              target="_blank"
+              rel="noreferrer"
+            >
+              View GitHub
+            </a>
           </div>
-
-          {showForm ? (
-            <form className="form" onSubmit={handleSubmit}>
-              <label>
-                Title
-                <input
-                  name="title"
-                  value={draft.title}
-                  onChange={handleChange}
-                  placeholder="Ex: Built a prototype for the quiz app"
-                  required
-                />
-              </label>
-              <label>
-                Date
-                <input
-                  type="date"
-                  name="date"
-                  value={draft.date}
-                  onChange={handleChange}
-                />
-              </label>
-              <label>
-                Tags (comma-separated)
-                <input
-                  name="tags"
-                  value={draft.tags}
-                  onChange={handleChange}
-                  placeholder="planning, practice, research"
-                />
-              </label>
-              <label>
-                Summary
-                <input
-                  name="summary"
-                  value={draft.summary}
-                  onChange={handleChange}
-                  placeholder="One line recap"
-                />
-              </label>
-              <label>
-                Details
-                <textarea
-                  name="content"
-                  value={draft.content}
-                  onChange={handleChange}
-                  placeholder="What did you do? What was hard? What is next?"
-                  rows="6"
-                  required
-                />
-              </label>
-              <div className="form-actions">
-                <button className="primary" type="submit">
-                  Add entry
-                </button>
-                <button
-                  className="ghost"
-                  type="button"
-                  onClick={() => setDraft({ ...emptyDraft })}
-                >
-                  Clear
-                </button>
-              </div>
-            </form>
-          ) : (
-            <div className="empty-state">Form hidden. Click “Show new entry”.</div>
-          )}
         </section>
 
-        <section className="panel">
-          <div className="panel-head">
-            <div>
-              <h2>Progress feed</h2>
-              <p>Search by keywords, tags, or topics.</p>
-            </div>
-            <input
-              className="search"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search entries"
-            />
+        <section className="section" id="projects">
+          <div className="section-heading">
+            <p className="section-kicker">Selected work</p>
+            <h2>Featured projects</h2>
+            <p>
+              Three projects that represent how I approach engineering,
+              experimentation, and technical problem-solving.
+            </p>
           </div>
 
-          <div className="feed">
-            {filteredPosts.length === 0 ? (
-              <div className="empty-state">No matching posts yet.</div>
-            ) : (
-              filteredPosts.map((post) => (
-                <article className="post" key={post.id}>
-                  <header>
-                    <div>
-                      <h3>{post.title}</h3>
-                      <p className="meta">
-                        <span>{post.date}</span>
-                        {post.tags?.length ? (
-                          <span>
-                            {post.tags.map((tag) => (
-                              <span className="tag" key={tag}>
-                                {tag}
-                              </span>
-                            ))}
-                          </span>
-                        ) : null}
-                      </p>
-                    </div>
-                    <button
-                      className="ghost danger"
-                      type="button"
-                      onClick={() => removePost(post.id)}
-                    >
-                      Delete
-                    </button>
-                  </header>
-                  {post.summary ? <p className="summary">{post.summary}</p> : null}
-                  <p className="body">{post.content}</p>
-                </article>
-              ))
-            )}
+          <div className="project-grid">
+            {featuredProjects.map((project) => (
+              <article className="project-card" key={project.title}>
+                <div className="project-number">{project.number}</div>
+                <div className="project-content">
+                  <p className="project-tags">{project.tags}</p>
+                  <h3>{project.title}</h3>
+                  <p>{project.description}</p>
+                  <span className="project-link">Case study coming soon →</span>
+                </div>
+              </article>
+            ))}
           </div>
+        </section>
+
+        <section className="section other-work-section">
+          <div className="section-heading compact">
+            <p className="section-kicker">Beyond the featured projects</p>
+            <h2>Other engineering & leadership</h2>
+          </div>
+
+          <div className="other-work-grid">
+            {otherWork.map((item) => (
+              <article className="other-work-card" key={item.title}>
+                <h3>{item.title}</h3>
+                <p>{item.description}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="section about-section" id="about">
+          <div>
+            <p className="section-kicker">About</p>
+            <h2>I like understanding the whole system.</h2>
+          </div>
+          <div className="about-copy">
+            <p>
+              My strongest interests are computer engineering, cybersecurity,
+              and intelligent systems. Across my projects, I tend to focus on
+              the boundaries between disciplines: where software meets
+              hardware, where networks connect devices, and where AI begins to
+              interact with real systems.
+            </p>
+            <p>
+              This portfolio documents not only finished work, but also the
+              design decisions, failures, revisions, and technical lessons that
+              shaped each project.
+            </p>
+          </div>
+        </section>
+
+        <section className="section resume-section" id="resume">
+          <div>
+            <p className="section-kicker">Resume</p>
+            <h2>Experience, activities, and technical work.</h2>
+          </div>
+          <p className="resume-note">
+            A downloadable resume will be added here once the final application
+            version is ready.
+          </p>
         </section>
       </main>
+
+      <footer className="site-footer">
+        <span>Grady May</span>
+        <span>Built with React + Vite · Hosted on GitHub Pages</span>
+      </footer>
     </div>
   );
 }
+
+export default App;
