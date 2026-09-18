@@ -50,12 +50,12 @@ a {
 }
 
 .site-shell {
-  width: min(1180px, calc(100% - 40px));
+  width: min(1120px, calc(100% - 40px));
   margin: 0 auto;
 }
 
 .site-header {
-  min-height: 82px;
+  min-height: 72px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -72,13 +72,13 @@ a {
   font-family: "Manrope", sans-serif;
   font-weight: 800;
   letter-spacing: -0.03em;
-  font-size: 1.05rem;
+  font-size: 1rem;
 }
 
 .nav-links {
   display: flex;
-  gap: 26px;
-  font-size: 0.93rem;
+  gap: 24px;
+  font-size: 0.9rem;
   color: var(--muted);
 }
 
@@ -91,63 +91,63 @@ a {
 }
 
 .hero-section {
-  min-height: 72vh;
+  min-height: 58vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 88px 0 72px;
-  max-width: 980px;
+  padding: 64px 0 56px;
+  max-width: 900px;
 }
 
 .eyebrow,
 .section-kicker {
-  margin: 0 0 18px;
+  margin: 0 0 14px;
   color: var(--accent);
   text-transform: uppercase;
-  letter-spacing: 0.18em;
-  font-size: 0.76rem;
+  letter-spacing: 0.16em;
+  font-size: 0.72rem;
   font-weight: 700;
 }
 
 .hero-section h1,
 .section-heading h2,
-.about-section h2,
 .resume-section h2 {
   font-family: "Manrope", sans-serif;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.035em;
   margin: 0;
 }
 
 .hero-section h1 {
-  font-size: clamp(3.3rem, 8vw, 7rem);
-  line-height: 0.98;
-  max-width: 11ch;
+  font-size: clamp(2.6rem, 6vw, 5rem);
+  line-height: 1.03;
+  max-width: 13ch;
 }
 
 .hero-copy {
-  max-width: 680px;
+  max-width: 650px;
   color: var(--muted);
-  font-size: clamp(1.05rem, 2vw, 1.25rem);
-  line-height: 1.75;
-  margin: 30px 0 0;
+  font-size: clamp(1rem, 1.5vw, 1.12rem);
+  line-height: 1.65;
+  margin: 22px 0 0;
 }
 
 .hero-actions {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
-  margin-top: 34px;
+  margin-top: 28px;
 }
 
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 46px;
-  padding: 0 18px;
-  border-radius: 10px;
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: 9px;
   border: 1px solid var(--line);
   font-weight: 600;
+  font-size: 0.92rem;
   transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
 }
 
@@ -166,51 +166,50 @@ a {
 }
 
 .section {
-  padding: 96px 0;
+  padding: 72px 0;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .section-heading {
-  max-width: 760px;
-  margin-bottom: 40px;
-}
-
-.section-heading.compact {
+  max-width: 720px;
   margin-bottom: 30px;
 }
 
+.section-heading.compact {
+  margin-bottom: 24px;
+}
+
 .section-heading h2,
-.about-section h2,
 .resume-section h2 {
-  font-size: clamp(2rem, 5vw, 4rem);
-  line-height: 1.05;
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  line-height: 1.08;
 }
 
 .section-heading > p:last-child,
 .about-copy,
 .resume-note {
   color: var(--muted);
-  line-height: 1.75;
+  line-height: 1.7;
 }
 
 .section-heading > p:last-child {
-  margin-top: 18px;
-  max-width: 650px;
+  margin-top: 14px;
+  max-width: 620px;
 }
 
 .project-grid {
   display: grid;
-  gap: 18px;
+  gap: 14px;
 }
 
 .project-card {
   display: grid;
-  grid-template-columns: 80px 1fr;
-  gap: 24px;
-  padding: 28px;
+  grid-template-columns: 64px 1fr;
+  gap: 20px;
+  padding: 24px;
   border: 1px solid var(--line);
   background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-  border-radius: 18px;
+  border-radius: 16px;
   transition: border-color 180ms ease, transform 180ms ease, background 180ms ease;
 }
 
@@ -224,13 +223,13 @@ a {
   font-family: "Manrope", sans-serif;
   font-weight: 800;
   color: #607089;
-  font-size: 1.2rem;
+  font-size: 1.05rem;
 }
 
 .project-tags {
-  margin: 0 0 10px;
+  margin: 0 0 8px;
   color: var(--accent);
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   letter-spacing: 0.03em;
 }
 
@@ -242,55 +241,56 @@ a {
 }
 
 .project-content h3 {
-  font-size: clamp(1.6rem, 3vw, 2.3rem);
+  font-size: clamp(1.4rem, 2.5vw, 1.9rem);
 }
 
 .project-content > p:not(.project-tags) {
   max-width: 720px;
   color: var(--muted);
-  line-height: 1.7;
-  margin: 14px 0 0;
+  line-height: 1.65;
+  margin: 10px 0 0;
 }
 
 .project-link {
   display: inline-block;
-  margin-top: 22px;
+  margin-top: 18px;
   color: #dce9f8;
-  font-size: 0.92rem;
+  font-size: 0.9rem;
 }
 
 .other-work-section {
-  padding-top: 84px;
+  padding-top: 68px;
 }
 
 .other-work-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  gap: 14px;
 }
 
 .other-work-card {
-  padding: 24px;
-  border-radius: 16px;
+  padding: 20px;
+  border-radius: 14px;
   background: var(--surface);
   border: 1px solid var(--line);
 }
 
 .other-work-card h3 {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
 }
 
 .other-work-card p {
-  margin: 12px 0 0;
+  margin: 10px 0 0;
   color: var(--muted);
-  line-height: 1.65;
+  line-height: 1.6;
+  font-size: 0.94rem;
 }
 
 .about-section,
 .resume-section {
   display: grid;
-  grid-template-columns: minmax(260px, 0.9fr) minmax(300px, 1.1fr);
-  gap: 70px;
+  grid-template-columns: minmax(160px, 0.55fr) minmax(300px, 1.45fr);
+  gap: 48px;
   align-items: start;
 }
 
@@ -299,7 +299,7 @@ a {
 }
 
 .about-copy p + p {
-  margin-top: 18px;
+  margin-top: 16px;
 }
 
 .resume-note {
@@ -308,24 +308,24 @@ a {
 }
 
 .site-footer {
-  min-height: 100px;
+  min-height: 84px;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
   color: #778397;
-  font-size: 0.88rem;
+  font-size: 0.84rem;
 }
 
 @media (max-width: 820px) {
   .site-shell {
-    width: min(100% - 28px, 1180px);
+    width: min(100% - 28px, 1120px);
   }
 
   .site-header {
     align-items: flex-start;
-    padding: 20px 0;
+    padding: 18px 0;
     flex-direction: column;
   }
 
@@ -338,12 +338,12 @@ a {
 
   .hero-section {
     min-height: auto;
-    padding: 78px 0 72px;
+    padding: 60px 0 56px;
   }
 
   .project-card {
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 8px;
   }
 
   .other-work-grid,
@@ -354,11 +354,11 @@ a {
 
   .about-section,
   .resume-section {
-    gap: 28px;
+    gap: 22px;
   }
 
   .site-footer {
-    padding: 30px 0;
+    padding: 26px 0;
     align-items: flex-start;
     flex-direction: column;
     justify-content: center;
@@ -367,19 +367,19 @@ a {
 
 @media (max-width: 520px) {
   .nav-links {
-    font-size: 0.84rem;
+    font-size: 0.82rem;
   }
 
   .hero-section h1 {
-    font-size: clamp(2.8rem, 15vw, 4.1rem);
+    font-size: clamp(2.35rem, 12vw, 3.5rem);
   }
 
   .section {
-    padding: 74px 0;
+    padding: 58px 0;
   }
 
   .project-card,
   .other-work-card {
-    padding: 20px;
+    padding: 18px;
   }
 }
