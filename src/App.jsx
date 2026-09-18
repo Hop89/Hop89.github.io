@@ -42,21 +42,24 @@ const otherWork = [
 
 function App() {
   return (
-    <div className="site-shell">
+    <>
       <header className="site-header">
-        <a className="wordmark" href="#top" aria-label="Grady May home">
-          Grady May
-        </a>
-        <nav className="nav-links" aria-label="Primary navigation">
-          <a href="#projects">Projects</a>
-          <a href="#about">About</a>
-          <a href="#resume">Resume</a>
-          <a href="https://github.com/Hop89" target="_blank" rel="noreferrer">
-            GitHub
+        <div className="header-inner">
+          <a className="wordmark" href="#top" aria-label="Grady May home">
+            Grady May
           </a>
-        </nav>
+          <nav className="nav-links" aria-label="Primary navigation">
+            <a href="#projects">Projects</a>
+            <a href="#about">About</a>
+            <a href="#resume">Resume</a>
+            <a href="https://github.com/Hop89" target="_blank" rel="noreferrer">
+              GitHub
+            </a>
+          </nav>
+        </div>
       </header>
 
+      <div className="site-shell">
       <main id="top">
         <section className="section projects-first" id="projects">
           <div className="section-heading">
@@ -135,7 +138,8 @@ function App() {
         <span>Grady May</span>
         <span>Built with React + Vite · Hosted on GitHub Pages</span>
       </footer>
-    </div>
+      </div>
+    </>
   );
 }
 
