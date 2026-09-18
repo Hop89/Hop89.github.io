@@ -58,33 +58,10 @@ function App() {
       </header>
 
       <main id="top">
-        <section className="hero-section">
-          <p className="eyebrow">Student engineer · builder · problem solver</p>
-          <h1>Building across software, hardware, cybersecurity, and AI.</h1>
-          <p className="hero-copy">
-            I am interested in building complete systems: understanding how the
-            pieces work individually, connecting them together, and improving
-            them when something breaks.
-          </p>
-          <div className="hero-actions">
-            <a className="button button-primary" href="#projects">
-              Explore projects
-            </a>
-            <a
-              className="button button-secondary"
-              href="https://github.com/Hop89"
-              target="_blank"
-              rel="noreferrer"
-            >
-              View GitHub
-            </a>
-          </div>
-        </section>
-
-        <section className="section" id="projects">
+        <section className="section projects-first" id="projects">
           <div className="section-heading">
             <p className="section-kicker">Selected work</p>
-            <h2>Featured projects</h2>
+            <h1>Featured projects</h1>
             <p>
               Three projects that represent how I approach engineering,
               experimentation, and technical problem-solving.
