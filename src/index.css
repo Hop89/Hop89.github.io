@@ -713,3 +713,275 @@ a {
     min-height: 230px;
   }
 }
+
+
+/* Compact project layout */
+.compact-detail {
+  padding-top: 34px;
+}
+
+.compact-detail .back-link {
+  margin-bottom: 22px;
+}
+
+.compact-hero {
+  max-width: 820px;
+  padding-bottom: 30px;
+}
+
+.compact-hero h1 {
+  font-size: clamp(2rem, 4.5vw, 3.7rem);
+}
+
+.compact-hero .project-detail-tags {
+  margin-top: 12px;
+}
+
+.project-overview-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+  gap: 18px;
+  align-items: start;
+  padding-bottom: 38px;
+}
+
+.overview-left {
+  display: grid;
+  gap: 14px;
+}
+
+.overview-card,
+.commit-panel,
+.development-card,
+.evidence-card {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.overview-card {
+  padding: 18px;
+}
+
+.overview-description {
+  margin: 10px 0 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.compact-prompt {
+  margin: 10px 0 0;
+  font-size: 0.91rem;
+  line-height: 1.55;
+}
+
+.placeholder-copy {
+  margin: 9px 0 0;
+  color: #758195;
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+.diagram-card .media-placeholder {
+  min-height: 210px;
+  margin-top: 12px;
+}
+
+.commit-panel {
+  padding: 18px;
+  position: sticky;
+  top: 92px;
+}
+
+.commit-panel-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-start;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.commit-panel-head h2,
+.evidence-card h2,
+.compact-section-head h2 {
+  margin: 6px 0 0;
+  font-family: "Manrope", sans-serif;
+  letter-spacing: -0.03em;
+}
+
+.commit-panel-head h2 {
+  font-size: 1.25rem;
+}
+
+.commit-status {
+  color: #758195;
+  font-size: 0.73rem;
+  text-align: right;
+}
+
+.commit-graph {
+  position: relative;
+  margin-top: 18px;
+}
+
+.commit-line {
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 7px;
+  width: 1px;
+  background: #334155;
+}
+
+.commit-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  gap: 11px;
+  padding: 0 0 17px;
+}
+
+.commit-row:last-child {
+  padding-bottom: 0;
+}
+
+.commit-dot {
+  width: 9px;
+  height: 9px;
+  margin-top: 5px;
+  margin-left: 3px;
+  border: 2px solid var(--accent);
+  border-radius: 999px;
+  background: var(--bg);
+  z-index: 1;
+}
+
+.commit-row strong {
+  font-family: "Manrope", sans-serif;
+  font-size: 0.84rem;
+}
+
+.commit-row p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.commit-note {
+  margin: 18px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  color: #758195;
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.compact-section {
+  padding: 38px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.compact-section-head {
+  margin-bottom: 18px;
+}
+
+.compact-section-head h2 {
+  font-size: clamp(1.45rem, 2.8vw, 2.1rem);
+}
+
+.development-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.development-card {
+  padding: 17px;
+}
+
+.development-card h3 {
+  margin: 9px 0 0;
+  font-family: "Manrope", sans-serif;
+  font-size: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.evidence-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  padding: 38px 0 54px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.evidence-card {
+  padding: 18px;
+}
+
+.evidence-card h2 {
+  font-size: 1.2rem;
+}
+
+.artifact-links {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.artifact-links > div {
+  display: grid;
+  gap: 3px;
+  padding: 12px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.artifact-links > div:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.artifact-links strong {
+  font-size: 0.86rem;
+}
+
+.artifact-links span {
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+.evidence-card .placeholder-list {
+  margin-top: 12px;
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .project-overview-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .commit-panel {
+    position: static;
+  }
+
+  .development-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .evidence-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .commit-panel-head {
+    flex-direction: column;
+  }
+
+  .commit-status {
+    text-align: left;
+  }
+}
