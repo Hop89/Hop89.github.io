@@ -124,7 +124,7 @@ function MediaPlaceholder({ label, hint }) {
 
 function ProjectDetail({ project }) {
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "instant" });
+    window.scrollTo({ top: 0, behavior: "auto" });
   }, [project.slug]);
 
   return (
