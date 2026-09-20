@@ -129,217 +129,142 @@ function ProjectDetail({ project }) {
 
   return (
     <div className="site-shell">
-      <main className="project-detail">
+      <main className="project-detail compact-detail">
         <a className="back-link" href="#projects">
           ← Back to projects
         </a>
 
-        <section className="project-detail-hero">
+        <section className="project-detail-hero compact-hero">
           <p className="section-kicker">Featured project {project.number}</p>
           <h1>{project.title}</h1>
           <p className="project-detail-tags">{project.tags}</p>
-          <p className="project-detail-intro">{project.description}</p>
         </section>
 
-        <aside className="portfolio-checklist" aria-label="Portfolio checklist">
-          <p className="checklist-title">What to show on this page</p>
-          <div className="checklist-items">
-            <span>Problem & need</span>
-            <span>Design & prototyping</span>
-            <span>Testing & iteration</span>
-            <span>Final execution</span>
-            <span>Individual contribution</span>
-            <span>Technical evidence</span>
-          </div>
-        </aside>
+        <section className="project-overview-grid">
+          <div className="overview-left">
+            <article className="overview-card">
+              <span className="mini-label">Description</span>
+              <p className="overview-description">{project.description}</p>
+            </article>
 
-        <section className="case-section">
-          <div className="case-number">01</div>
-          <div className="case-content">
-            <p className="section-kicker">Problem & need</p>
-            <h2>What problem were you trying to solve?</h2>
-            <p className="editor-prompt">{project.prompts.problem}</p>
-            <div className="writing-placeholder">
-              <strong>Add 1–2 concise paragraphs here.</strong>
-              <p>
-                Define the problem, user need, or hypothesis before explaining
-                the solution. Keep this focused enough that a reviewer can
-                understand why the project exists before seeing the technical
-                details.
+            <article className="overview-card">
+              <span className="mini-label">Problem solved</span>
+              <p className="editor-prompt compact-prompt">{project.prompts.problem}</p>
+              <p className="placeholder-copy">
+                Replace this prompt with a short explanation of the user need,
+                technical problem, or gap the project addresses.
               </p>
-            </div>
+            </article>
+
+            <article className="overview-card diagram-card">
+              <span className="mini-label">System diagram</span>
+              <MediaPlaceholder
+                label="Architecture / workflow diagram"
+                hint="Show the main components and how data, commands, or information move through the system."
+              />
+            </article>
           </div>
-        </section>
 
-        <section className="case-section">
-          <div className="case-number">02</div>
-          <div className="case-content">
-            <p className="section-kicker">Design & prototyping</p>
-            <h2>How did the system take shape?</h2>
-            <p className="editor-prompt">{project.prompts.design}</p>
-
-            <div className="media-grid media-grid-three">
-              <MediaPlaceholder
-                label="Architecture / system diagram"
-                hint="Show how the major components connect."
-              />
-              <MediaPlaceholder
-                label="Prototype image"
-                hint="Use an early build, CAD view, wiring diagram, or interface screenshot."
-              />
-              <MediaPlaceholder
-                label="Second design artifact"
-                hint="Add another image that explains a technical decision."
-              />
-            </div>
-
-            <div className="writing-placeholder">
-              <strong>Explain the important design decisions.</strong>
-              <p>
-                Describe why you chose the architecture, tools, hardware, or
-                approach you did. This is where the reviewer should be able to
-                follow your engineering process rather than only see the result.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section className="case-section">
-          <div className="case-number">03</div>
-          <div className="case-content">
-            <p className="section-kicker">Testing & iteration</p>
-            <h2>What failed, changed, or had to be debugged?</h2>
-            <p className="editor-prompt">{project.prompts.testing}</p>
-
-            <div className="iteration-grid">
-              <div className="iteration-card">
-                <span className="iteration-label">Initial approach</span>
-                <h3>What did you try first?</h3>
-                <p>Add the original assumption, design, test, or implementation.</p>
-              </div>
-              <div className="iteration-arrow">→</div>
-              <div className="iteration-card">
-                <span className="iteration-label">Evidence</span>
-                <h3>What went wrong?</h3>
-                <p>Add the bug, failed test, data point, or unexpected behavior.</p>
-              </div>
-              <div className="iteration-arrow">→</div>
-              <div className="iteration-card">
-                <span className="iteration-label">Revision</span>
-                <h3>What did you change?</h3>
-                <p>Explain the diagnosis and the redesign that followed.</p>
-              </div>
-            </div>
-
-            <div className="media-grid media-grid-two">
-              <MediaPlaceholder
-                label="Failure / test evidence"
-                hint="Screenshot, photo, log, plot, or failed revision."
-              />
-              <MediaPlaceholder
-                label="Revised version"
-                hint="Show the change that resulted from the test."
-              />
-            </div>
-          </div>
-        </section>
-
-        <section className="case-section">
-          <div className="case-number">04</div>
-          <div className="case-content">
-            <p className="section-kicker">Final execution</p>
-            <h2>Show the project working.</h2>
-            <p className="editor-prompt">{project.prompts.final}</p>
-
-            <div className="video-placeholder">
-              <span>30–90 second demo video</span>
-              <p>
-                Add a short, direct demonstration of the working system here.
-              </p>
-            </div>
-
-            <div className="results-grid">
-              <div className="result-card">
-                <span>Result</span>
-                <p>Add the most important working capability or outcome.</p>
-              </div>
-              <div className="result-card">
-                <span>Evidence</span>
-                <p>Add a measurable result, test outcome, or demonstrated use.</p>
-              </div>
-              <div className="result-card">
-                <span>Limitation</span>
-                <p>Add what the current version still cannot do.</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="case-section contribution-section">
-          <div className="case-number">05</div>
-          <div className="case-content">
-            <p className="section-kicker">Individual contribution</p>
-            <h2>Make your role unmistakable.</h2>
-            <p className="editor-prompt">{project.prompts.contribution}</p>
-
-            <div className="contribution-grid">
+          <aside className="commit-panel">
+            <div className="commit-panel-head">
               <div>
-                <span className="mini-label">I personally</span>
-                <ul className="placeholder-list">
-                  <li>Add the components you designed.</li>
-                  <li>Add the code or systems you implemented.</li>
-                  <li>Add the testing or integration work you led.</li>
-                </ul>
+                <span className="mini-label">Development timeline</span>
+                <h2>Commit history</h2>
               </div>
-              <div>
-                <span className="mini-label">Team / collaborators</span>
-                <ul className="placeholder-list">
-                  <li>Describe the work owned by collaborators.</li>
-                  <li>Explain where responsibilities overlapped.</li>
-                  <li>Clarify how you worked together.</li>
-                </ul>
-              </div>
+              <span className="commit-status">Repository not linked yet</span>
             </div>
-          </div>
-        </section>
 
-        <section className="case-section">
-          <div className="case-number">06</div>
-          <div className="case-content">
-            <p className="section-kicker">Technical evidence</p>
-            <h2>Give reviewers somewhere to look deeper.</h2>
-
-            <div className="artifact-grid">
-              <div className="artifact-slot">
-                <span>GitHub / code</span>
-                <p>Add the relevant repository or selected code evidence.</p>
-              </div>
-              <div className="artifact-slot">
-                <span>Diagram / schematic</span>
-                <p>Add architecture, CAD, wiring, or system documentation.</p>
-              </div>
-              <div className="artifact-slot">
-                <span>Build / commit history</span>
-                <p>Add commits, development logs, or other evidence of iteration.</p>
-              </div>
-              <div className="artifact-slot">
-                <span>Supporting document</span>
-                <p>Add a report, abstract, poster, test sheet, or other artifact.</p>
-              </div>
+            <div className="commit-graph" aria-label="Commit timeline placeholder">
+              <div className="commit-line" />
+              {[1, 2, 3, 4, 5].map((item) => (
+                <div className="commit-row" key={item}>
+                  <span className="commit-dot" />
+                  <div>
+                    <strong>Commit milestone</strong>
+                    <p>Add a meaningful commit, test, redesign, or release point.</p>
+                  </div>
+                </div>
+              ))}
             </div>
-          </div>
-        </section>
 
-        <section className="project-next">
-          <p className="section-kicker">Reflection & next steps</p>
-          <h2>What did this project change about how you build?</h2>
-          <div className="writing-placeholder">
-            <strong>Add a short closing reflection.</strong>
-            <p>
-              Focus on one or two technical lessons and what you would improve
-              next. Keep it specific to the engineering work shown above.
+            <p className="commit-note">
+              Once the project repository is linked, this can show real commits
+              and dates so reviewers can see how the project developed over time.
             </p>
+          </aside>
+        </section>
+
+        <section className="compact-section">
+          <div className="compact-section-head">
+            <p className="section-kicker">Development</p>
+            <h2>How the project changed as I built it</h2>
           </div>
+
+          <div className="development-grid">
+            <article className="development-card">
+              <span className="mini-label">Design & prototyping</span>
+              <h3>Key design decisions</h3>
+              <p className="editor-prompt compact-prompt">{project.prompts.design}</p>
+              <p className="placeholder-copy">
+                Add the architecture choices, tools, prototypes, or technical
+                tradeoffs that shaped the system.
+              </p>
+            </article>
+
+            <article className="development-card">
+              <span className="mini-label">Testing & iteration</span>
+              <h3>Failures and revisions</h3>
+              <p className="editor-prompt compact-prompt">{project.prompts.testing}</p>
+              <p className="placeholder-copy">
+                Add one or two concrete bugs, failed tests, or redesigns and what
+                you changed because of them.
+              </p>
+            </article>
+
+            <article className="development-card">
+              <span className="mini-label">Current result</span>
+              <h3>What works now</h3>
+              <p className="editor-prompt compact-prompt">{project.prompts.final}</p>
+              <p className="placeholder-copy">
+                Add the current capabilities, measurable results, and one honest
+                limitation or next step.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section className="evidence-grid">
+          <article className="evidence-card">
+            <span className="mini-label">Individual contribution</span>
+            <h2>My role</h2>
+            <p className="editor-prompt compact-prompt">
+              {project.prompts.contribution}
+            </p>
+            <ul className="placeholder-list">
+              <li>Add what you personally designed.</li>
+              <li>Add what you implemented or tested.</li>
+              <li>Separate collaborator or team responsibilities.</li>
+            </ul>
+          </article>
+
+          <article className="evidence-card">
+            <span className="mini-label">Technical evidence</span>
+            <h2>Artifacts</h2>
+            <div className="artifact-links">
+              <div>
+                <strong>GitHub / code</strong>
+                <span>Add repository or selected code.</span>
+              </div>
+              <div>
+                <strong>Build evidence</strong>
+                <span>Add logs, screenshots, test output, or revisions.</span>
+              </div>
+              <div>
+                <strong>Supporting document</strong>
+                <span>Add report, abstract, poster, or technical notes.</span>
+              </div>
+            </div>
+          </article>
         </section>
       </main>
 
