@@ -1582,3 +1582,92 @@ a.commit-row:hover {
     font-size: 0.7rem;
   }
 }
+
+
+/* Compact development + inline output */
+.development-layout.has-output {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(360px, 1.18fr);
+  gap: 14px;
+  align-items: stretch;
+}
+
+.development-layout.has-output .development-grid {
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.development-layout.has-output .development-card {
+  padding: 14px 15px;
+}
+
+.development-layout.has-output .development-card h3 {
+  margin-top: 6px;
+  font-size: 0.92rem;
+}
+
+.development-layout.has-output .development-card > p {
+  margin-top: 7px;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.example-output-card {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.example-output-card .example-output-heading {
+  margin-bottom: 10px;
+  align-items: center;
+}
+
+.example-output-card .example-output-heading h3 {
+  margin: 5px 0 0;
+  font-family: "Manrope", sans-serif;
+  font-size: 0.98rem;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.example-output-card .terminal-bar {
+  min-height: 30px;
+}
+
+.example-output-card .terminal-command {
+  padding: 10px 12px 9px;
+  font-size: 0.69rem;
+  line-height: 1.45;
+}
+
+.example-output-card .terminal-output {
+  max-height: 250px;
+  padding: 12px;
+  font-size: 0.67rem;
+  line-height: 1.48;
+  overflow: auto;
+}
+
+.example-output-card .example-output-note {
+  margin-top: 8px;
+  font-size: 0.7rem;
+}
+
+@media (max-width: 900px) {
+  .development-layout.has-output {
+    grid-template-columns: 1fr;
+  }
+
+  .development-layout.has-output .development-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 680px) {
+  .development-layout.has-output .development-grid {
+    grid-template-columns: 1fr;
+  }
+}
