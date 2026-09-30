@@ -37,6 +37,24 @@ const featuredProjects = [
         { label: "Firmware SDK", detail: "Public Arduino and MicroPython SDK implementing the three-message AgentBridge serial protocol.", url: "https://github.com/Hop89/agentbridge-firmware-sdk" },
         { label: "Security model", detail: "Device scoping, trust levels, cancellation, sequence caps, and provider endpoint protections." },
       ],
+      outputExample: {
+        kicker: "Example response format",
+        title: "A policy-gated hardware action",
+        command: 'python -m agentbridge.cli ask --port COM4 "what is the flipper uptime?"',
+        output: `{
+  "request_id": "req_123",
+  "status": "completed",
+  "result": {
+    "device_id": "flipper.zero.cli",
+    "capability": "system.uptime",
+    "success": true,
+    "output": {
+      "uptime_seconds": 12345
+    }
+  }
+}`,
+        note: "The command comes from the current Flipper quick start. The JSON is the documented structured ActionResult format rather than a captured hardware run.",
+      },
       staticCommits: [
         { sha: "1b23464b982fc8ed92cf32d5fe64ed6798dd303f", message: "Extract shared probe_serial_port helper and deduplicate CLI/GUI probe paths", date: "2026-05-16T01:22:32Z" },
         { sha: "868d923d16cb0f19cd6642b1f4c307ee158dfb39", message: "Add --name flag to adapter create for clean firmware directory names", date: "2026-05-13T14:03:00Z" },
@@ -125,6 +143,26 @@ const featuredProjects = [
         { label: "Historical reports", detail: "Timestamped reports organized by target IP for comparison." },
         { label: "Trend engine", detail: "Tracks open-port deltas, severity changes, new findings, and resolved findings." },
       ],
+      outputExample: {
+        kicker: "Captured example",
+        title: "Prioritized analysis from a local scan",
+        command: `perimeter scan --connected --output local_scan_1.xml
+perimeter analyze --latest`,
+        output: `Perimeter Analysis
+Hosts analyzed: 1
+Open ports analyzed: 6
+Findings by severity: critical=1, high=2, medium=0, low=3
+
+Top Findings:
+[CRITICAL 95] 10.33.4.52 445/tcp microsoft-ds
+Rationale: SMB exposure is high-risk for lateral movement.
+Remediation: Restrict network exposure, patch to latest stable release,
+and require strong authentication.
+
+[HIGH 85] 10.33.4.52 139/tcp netbios-ssn
+[HIGH 85] 10.33.4.52 5900/tcp vnc`,
+        note: "Excerpt from an actual Perimeter analysis included in my project writeup.",
+      },
       staticCommits: [
         { sha: "c9b29e698243677803acc4f1f79cf9153c199c4a", message: "Allowed comparison of trends for target IPs", date: "2026-03-23T09:43:53Z", url: "https://github.com/Hop89/Perimeter/commit/c9b29e698243677803acc4f1f79cf9153c199c4a" },
         { sha: "6bfd0eea64ad1f45c428481dd0fd351146e004d6", message: "Update README: correct CLI command, add installation, change planned features to features", date: "2026-03-19T16:18:51Z", url: "https://github.com/Hop89/Perimeter/commit/6bfd0eea64ad1f45c428481dd0fd351146e004d6" },
@@ -591,6 +629,39 @@ function SystemDiagram({ project }) {
   );
 }
 
+function ExampleOutput({ example }) {
+  return (
+    <section className="example-output-section">
+      <div className="example-output-heading">
+        <div>
+          <p className="section-kicker">{example.kicker}</p>
+          <h2>{example.title}</h2>
+        </div>
+        <span className="example-output-badge">CLI / structured output</span>
+      </div>
+
+      <div className="terminal-window">
+        <div className="terminal-bar">
+          <span />
+          <span />
+          <span />
+          <strong>example output</strong>
+        </div>
+        <div className="terminal-command">
+          {example.command.split("\n").map((line) => (
+            <div key={line}>
+              <span className="terminal-prompt">$</span> {line}
+            </div>
+          ))}
+        </div>
+        <pre className="terminal-output">{example.output}</pre>
+      </div>
+
+      <p className="example-output-note">{example.note}</p>
+    </section>
+  );
+}
+
 function ProjectDetail({ project }) {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "auto" });
@@ -661,6 +732,8 @@ function ProjectDetail({ project }) {
             </article>
           </div>
         </section>
+
+        {project.outputExample ? <ExampleOutput example={project.outputExample} /> : null}
 
         <section className="evidence-grid">
           <article className="evidence-card">
