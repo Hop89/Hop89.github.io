@@ -1236,3 +1236,90 @@ a.commit-row:hover {
     gap: 2px;
   }
 }
+
+
+/* Loop architecture diagrams */
+.loop-diagram {
+  margin-top: 14px;
+}
+
+.loop-diagram-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 250px;
+  overflow: visible;
+}
+
+.loop-path {
+  fill: none;
+  stroke: #496078;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.loop-return-path {
+  stroke-dasharray: 6 6;
+}
+
+.loop-arrow-head {
+  fill: #6f8eac;
+}
+
+.loop-node {
+  fill: rgba(255, 255, 255, 0.025);
+  stroke: var(--line);
+  stroke-width: 1.5;
+}
+
+.loop-node-index {
+  fill: var(--accent);
+  font-family: "Manrope", sans-serif;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.loop-node-label {
+  fill: #e5edf7;
+  font-family: "Manrope", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.loop-caption {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin-top: 8px;
+  padding: 11px 12px;
+  border: 1px solid rgba(143, 199, 255, 0.14);
+  border-radius: 10px;
+  background: rgba(143, 199, 255, 0.025);
+}
+
+.loop-symbol {
+  color: var(--accent);
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.loop-caption p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 520px) {
+  .loop-diagram {
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .loop-diagram-svg {
+    width: 560px;
+    max-width: none;
+  }
+}
