@@ -13,11 +13,11 @@ const featuredProjects = [
       problem:
         "The core problem is not simply getting an AI model to control hardware; it is deciding what the model is allowed to do when its output can affect a real device. I built AgentBridge around the idea that the model should request narrowly defined capabilities while deterministic host code handles discovery, policy, execution, and logging.",
       design:
-        "AgentBridge uses typed models for devices, capabilities, requests, results, and policy decisions. A registry discovers devices, adapters expose capabilities, and an async executor checks policy before any action reaches hardware. The agent only sees a small tool surface rather than raw serial handles, and the GUI applies the same trust levels to both manual and agent-driven actions.",
+        "I separated planning from execution: agents request typed capabilities, while AgentBridge handles discovery, policy, hardware access, and logging.",
       iteration:
-        "The system became more defensive as it grew. Device scoping was enforced at the execution boundary, sequence length was capped, cancellation was threaded into in-progress hardware calls, SSRF protections kept provider credentials away from user-controlled URLs, and capability injection was guarded by explicit firmware identity. Later work added adapter manifests, VID:PID identification, firmware generation, flashing, and probe workflows.",
+        "As testing exposed edge cases, I moved more safeguards into the execution boundary: device scoping, sequence caps, cancellation, endpoint protection, and stricter firmware identification.",
       current:
-        "The framework supports OpenAI and Ollama agents, Flipper Zero and AgentBridge serial adapter paths, a GUI and CLI, device-scoped agent runs, safe/restricted/dangerous trust levels, live execution traces, adapter manifests, firmware generation, and a separate public firmware SDK for Arduino-compatible and MicroPython devices.",
+        "The current system supports OpenAI and Ollama agents, multiple hardware adapters, trust levels, live traces, firmware tooling, and a public firmware SDK.",
       learned:
         "I learned that safety cannot live only in the prompt. The most important controls need to sit at the execution boundary where the model cannot bypass them. Building AgentBridge made me think of an AI model as an untrusted planner: useful for deciding what to try, but never the component that gets final authority over the hardware.",
       contribution:
@@ -119,11 +119,11 @@ const featuredProjects = [
       problem:
         "Nmap is very good at collecting network information, but raw ports and service data still leave the user with the harder question: what matters, what changed, and what should I fix first? I built Perimeter to add that interpretation layer rather than trying to replace the scanner itself.",
       design:
-        "Perimeter separates scanning, XML parsing, risk analysis, report storage, and trend comparison into distinct modules. The CLI can run scans, analyze saved XML, store reports by target IP, compare historical scans, and optionally enrich triage with an AI model.",
+        "I split scanning, XML parsing, risk analysis, report storage, and trend comparison into separate modules so each stage could be tested independently.",
       iteration:
-        "The project started as a simple scan CLI. I then made the output more readable, added connected-interface scanning, began vulnerability analysis, moved scan results into structured reports, and finally added historical comparisons by IP. That progression changed the project from a one-time scanner into something that can measure security posture over time.",
+        "Perimeter grew from a scan wrapper into a reporting system: readable output, risk scoring, structured reports, then historical comparisons and trend analysis.",
       current:
-        "Perimeter currently supports risk-based host/service scoring, misconfiguration checks, IP-organized report history, scan diffs, trend analysis, readable text or JSON output, an optional AI triage layer, and a cross-platform CLI.",
+        "It now scores findings, flags misconfigurations, stores reports by IP, compares scans over time, and outputs readable text or JSON.",
       learned:
         "I learned that collecting more security data is not automatically useful. The harder engineering problem is preserving enough structure to compare scans, prioritize findings, and explain what changed. Adding historical reports pushed me to think about security as a changing system instead of a one-time snapshot.",
       contribution:
@@ -192,11 +192,11 @@ and require strong authentication.
       problem:
         "The project is built around a simple limitation: weather can change over distances much smaller than the spacing between conventional observations. We wanted a system that could collect local station data, move it without depending on normal infrastructure, and turn it into a useful view of nearby conditions.",
       design:
-        "The software pipeline started with minute-level station data and a logistic-regression baseline that predicts rain in the next 30 minutes from the previous hour of signals. I later added neighborhood features using haversine nearest-neighbor calculations, while the visualization grew from a generated Leaflet map into a React + Leaflet interface that supports multiple stations.",
+        "I built the software around minute-level station data, a 30-minute logistic-regression baseline, spatial neighbor features, and a React + Leaflet map.",
       iteration:
-        "One of the useful early decisions was to build against synthetic data first. That let me debug feature generation, model inputs, and visualization before real station data was ready. The commit history also shows the project moving from a model baseline, to spatial neighbor features, to Meshtastic work, and then to an increasingly interactive multi-station map.",
+        "Using synthetic data first let me debug the pipeline before the hardware was ready. I then added neighbor features, Meshtastic integration, and a multi-station map.",
       current:
-        "The current codebase can generate multi-station synthetic readings, train the baseline model, produce rain probabilities, and visualize the latest station state on a Leaflet map. The README also lays out the next step: replace the sample data with real station feeds and evaluate the model with metrics such as AUC, Brier score, and reliability plots.",
+        "The current code can generate multi-station data, train the baseline, produce rain probabilities, and display station state on the map.",
       learned:
         "I learned that it is much easier to build a complicated system when I separate the interfaces between pieces. Using synthetic data first meant I could work on processing and visualization without waiting for every hardware component, and adding neighbor features made the value of a network of stations much clearer than treating each station independently.",
       contribution:
@@ -632,13 +632,13 @@ function SystemDiagram({ project }) {
 
 function ExampleOutput({ example }) {
   return (
-    <section className="example-output-section">
+    <article className="example-output-card">
       <div className="example-output-heading">
         <div>
-          <p className="section-kicker">{example.kicker}</p>
-          <h2>{example.title}</h2>
+          <span className="mini-label">{example.kicker}</span>
+          <h3>{example.title}</h3>
         </div>
-        <span className="example-output-badge">CLI / structured output</span>
+        <span className="example-output-badge">CLI / output</span>
       </div>
 
       <div className="terminal-window">
@@ -659,7 +659,7 @@ function ExampleOutput({ example }) {
       </div>
 
       <p className="example-output-note">{example.note}</p>
-    </section>
+    </article>
   );
 }
 
@@ -713,28 +713,30 @@ function ProjectDetail({ project }) {
             <h2>How the project changed as I built it</h2>
           </div>
 
-          <div className="development-grid">
-            <article className="development-card">
-              <span className="mini-label">Design & prototyping</span>
-              <h3>Architecture</h3>
-              <p>{project.design}</p>
-            </article>
+          <div className={"development-layout " + (project.outputExample ? "has-output" : "")}>
+            <div className="development-grid">
+              <article className="development-card">
+                <span className="mini-label">Design</span>
+                <h3>Architecture</h3>
+                <p>{project.design}</p>
+              </article>
 
-            <article className="development-card">
-              <span className="mini-label">Testing & iteration</span>
-              <h3>Changes over time</h3>
-              <p>{project.iteration}</p>
-            </article>
+              <article className="development-card">
+                <span className="mini-label">Iteration</span>
+                <h3>What changed</h3>
+                <p>{project.iteration}</p>
+              </article>
 
-            <article className="development-card">
-              <span className="mini-label">Current result</span>
-              <h3>What works now</h3>
-              <p>{project.current}</p>
-            </article>
+              <article className="development-card">
+                <span className="mini-label">Current</span>
+                <h3>What works now</h3>
+                <p>{project.current}</p>
+              </article>
+            </div>
+
+            {project.outputExample ? <ExampleOutput example={project.outputExample} /> : null}
           </div>
         </section>
-
-        {project.outputExample ? <ExampleOutput example={project.outputExample} /> : null}
 
         <section className="evidence-grid">
           <article className="evidence-card">
