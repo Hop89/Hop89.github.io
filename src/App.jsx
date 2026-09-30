@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 const featuredProjects = [
   {
@@ -186,23 +186,6 @@ const featuredProjects = [
 
 ];
 
-const otherWork = [
-  {
-    title: "Warrior Robotics",
-    description:
-      "FRC programming, autonomous systems, controls, technical leadership, and cross-disciplinary troubleshooting.",
-  },
-  {
-    title: "Homelab",
-    description:
-      "A personal infrastructure environment built around virtualization, containers, networking, storage, and self-hosted services.",
-  },
-  {
-    title: "Hackathons",
-    description:
-      "Rapid prototyping, collaborative development, and presentation-focused software projects built under time constraints.",
-  },
-];
 
 function useHash() {
   const [hash, setHash] = useState(() => window.location.hash);
@@ -225,8 +208,6 @@ function Header() {
         </a>
         <nav className="nav-links" aria-label="Primary navigation">
           <a href="#projects">Projects</a>
-          <a href="#about">About</a>
-          <a href="#resume">Resume</a>
           <a href="https://github.com/Hop89" target="_blank" rel="noreferrer">
             GitHub
           </a>
@@ -551,52 +532,6 @@ function Home() {
           </div>
         </section>
 
-        <section className="section other-work-section">
-          <div className="section-heading compact">
-            <p className="section-kicker">Beyond the featured projects</p>
-            <h2>Other engineering & leadership</h2>
-          </div>
-
-          <div className="other-work-grid">
-            {otherWork.map((item) => (
-              <article className="other-work-card" key={item.title}>
-                <h3>{item.title}</h3>
-                <p>{item.description}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="section about-section" id="about">
-          <div>
-            <p className="section-kicker">About</p>
-          </div>
-          <div className="about-copy">
-            <p>
-              My strongest interests are computer engineering, cybersecurity,
-              and intelligent systems. Across my projects, I tend to focus on
-              the boundaries between disciplines: where software meets
-              hardware, where networks connect devices, and where AI begins to
-              interact with real systems.
-            </p>
-            <p>
-              This portfolio documents not only finished work, but also the
-              design decisions, failures, revisions, and technical lessons that
-              shaped each project.
-            </p>
-          </div>
-        </section>
-
-        <section className="section resume-section" id="resume">
-          <div>
-            <p className="section-kicker">Resume</p>
-            <h2>Experience, activities, and technical work.</h2>
-          </div>
-          <p className="resume-note">
-            A downloadable resume will be added here once the final application
-            version is ready.
-          </p>
-        </section>
       </main>
 
       <footer className="site-footer">
