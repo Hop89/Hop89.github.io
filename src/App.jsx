@@ -23,7 +23,7 @@ const featuredProjects = [
       learned:
         "I learned that safety cannot live only in the prompt. The most important controls need to sit at the execution boundary where the model cannot bypass them. Building AgentBridge made me think of an AI model as an untrusted planner: useful for deciding what to try, but never the component that gets final authority over the hardware.",
       contribution:
-        "I designed AgentBridge as the main project for my AI-focused independent study, built the host-side framework and interfaces, and iterated on the policy and adapter layers as the system expanded to more devices and agent providers.",
+        "I designed and implemented the core architecture of AgentBridge, including the agent execution pipeline, hardware abstraction layer, capability system, and safety controls. The project focuses on enabling AI systems to interact with physical devices while maintaining predictable boundaries, controlled access, and traceable execution.",
       diagramType: "loop",
       loopCaption: "Results and live traces return to the agent, which can decide on the next permitted action.",
       architecture: [
@@ -131,7 +131,7 @@ const featuredProjects = [
       learned:
         "I learned that collecting more security data is not automatically useful. The harder engineering problem is preserving enough structure to compare scans, prioritize findings, and explain what changed. Adding historical reports pushed me to think about security as a changing system instead of a one-time snapshot.",
       contribution:
-        "Perimeter is an independent-study project, so I designed the architecture, implemented the CLI and analysis pipeline, added report persistence and trend comparison, and iterated on how the results are presented.",
+        "I designed and built Perimeter as a complete security analysis workflow, from Nmap integration and XML parsing through risk scoring, report storage, and historical comparison. The project focuses on transforming raw network data into prioritized security insights that are easier to understand and act on.",
       diagramType: "loop",
       loopCaption: "Each later scan is compared with stored history, so the output informs what to investigate and scan again.",
       architecture: [
@@ -714,7 +714,7 @@ function ProjectDetail({ project }) {
         <section className="compact-section">
           <div className="compact-section-head">
             <p className="section-kicker">Development</p>
-            <h2>How the project changed as I built it</h2>
+            <h2>Development & Evolution</h2>
           </div>
 
           <div className={"development-layout " + (project.outputExample ? "has-output" : "")}>
@@ -752,8 +752,16 @@ function ProjectDetail({ project }) {
 
         <section className="evidence-grid">
           <article className="evidence-card">
-            <span className="mini-label">Individual contribution</span>
-            <h2>My role</h2>
+            <span className="mini-label">
+              {project.slug === "weather-nowcasting-network"
+                ? "Individual contribution"
+                : "Engineering decisions"}
+            </span>
+            <h2>
+              {project.slug === "weather-nowcasting-network"
+                ? "My role"
+                : "How I built it"}
+            </h2>
             <p className="role-copy">{project.contribution}</p>
           </article>
 
