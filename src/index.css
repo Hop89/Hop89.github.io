@@ -1467,3 +1467,118 @@ a.commit-row:hover {
     max-width: none;
   }
 }
+
+
+/* Example output terminals */
+.example-output-section {
+  padding: 38px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.example-output-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+
+.example-output-heading h2 {
+  margin: 0;
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(1.35rem, 2.5vw, 1.9rem);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+.example-output-badge {
+  flex: 0 0 auto;
+  padding: 6px 9px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: #7f8da0;
+  font-size: 0.68rem;
+}
+
+.terminal-window {
+  overflow: hidden;
+  border: 1px solid #2d394a;
+  border-radius: 13px;
+  background: #080b10;
+}
+
+.terminal-bar {
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 12px;
+  border-bottom: 1px solid #202938;
+  background: #0e131b;
+}
+
+.terminal-bar > span {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #465265;
+}
+
+.terminal-bar strong {
+  margin-left: 5px;
+  color: #718096;
+  font-family: "Inter", sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.terminal-command {
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid #18202c;
+  color: #dce5f2;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 0.77rem;
+  line-height: 1.6;
+  overflow-x: auto;
+}
+
+.terminal-command > div + div {
+  margin-top: 2px;
+}
+
+.terminal-prompt {
+  color: var(--accent);
+  user-select: none;
+}
+
+.terminal-output {
+  margin: 0;
+  padding: 16px;
+  overflow-x: auto;
+  color: #aebacc;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 0.75rem;
+  line-height: 1.58;
+  white-space: pre;
+}
+
+.example-output-note {
+  margin: 10px 0 0;
+  color: #718096;
+  font-size: 0.76rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 680px) {
+  .example-output-heading {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .terminal-output,
+  .terminal-command {
+    font-size: 0.7rem;
+  }
+}
