@@ -140,6 +140,7 @@ const featuredProjects = [
       ],
       artifacts: [
         { label: "GitHub repository", detail: "Public source code, README, and commit history.", url: "https://github.com/Hop89/Perimeter" },
+        { label: "Full project writeup", detail: "Full writeup covering motivation, architecture, capabilities, example output, challenges, and future development.", url: "/perimeter-writeup.html" },
         { label: "Historical reports", detail: "Timestamped reports organized by target IP for comparison." },
         { label: "Trend engine", detail: "Tracks open-port deltas, severity changes, new findings, and resolved findings." },
       ],
