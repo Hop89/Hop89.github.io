@@ -22,13 +22,15 @@ const featuredProjects = [
         "I learned that safety cannot live only in the prompt. The most important controls need to sit at the execution boundary where the model cannot bypass them. Building AgentBridge made me think of an AI model as an untrusted planner: useful for deciding what to try, but never the component that gets final authority over the hardware.",
       contribution:
         "I designed AgentBridge as the main project for my AI-focused independent study, built the host-side framework and interfaces, and iterated on the policy and adapter layers as the system expanded to more devices and agent providers.",
+      diagramType: "loop",
+      loopCaption: "Results and live traces return to the agent, which can decide on the next permitted action.",
       architecture: [
         "AI provider",
-        "Agent tool surface",
-        "Device scope + trust policy",
-        "Async executor",
-        "Adapter / plugin",
-        "Physical hardware",
+        "Tool request",
+        "Policy gate",
+        "Executor",
+        "Adapter + device",
+        "Result + trace",
       ],
       artifacts: [
         { label: "Host runtime", detail: "Private main repository containing the agent runtime, GUI, CLI, policy layer, adapters, and tests." },
@@ -108,13 +110,15 @@ const featuredProjects = [
         "I learned that collecting more security data is not automatically useful. The harder engineering problem is preserving enough structure to compare scans, prioritize findings, and explain what changed. Adding historical reports pushed me to think about security as a changing system instead of a one-time snapshot.",
       contribution:
         "Perimeter is an independent-study project, so I designed the architecture, implemented the CLI and analysis pipeline, added report persistence and trend comparison, and iterated on how the results are presented.",
+      diagramType: "loop",
+      loopCaption: "Each later scan is compared with stored history, so the output informs what to investigate and scan again.",
       architecture: [
-        "Nmap scan",
+        "Target scan",
         "XML parser",
-        "Risk + misconfig analysis",
-        "IP-based report store",
-        "Trend / diff engine",
-        "Readable CLI report",
+        "Risk analysis",
+        "Stored report",
+        "Trend / diff",
+        "Next scan",
       ],
       artifacts: [
         { label: "GitHub repository", detail: "Public source code, README, and commit history.", url: "https://github.com/Hop89/Perimeter" },
@@ -158,6 +162,7 @@ const featuredProjects = [
         "I learned that it is much easier to build a complicated system when I separate the interfaces between pieces. Using synthetic data first meant I could work on processing and visualization without waiting for every hardware component, and adding neighbor features made the value of a network of stations much clearer than treating each station independently.",
       contribution:
         "My main work has been on data processing and the software interfaces: the model baseline, feature pipeline, and mapping/visualization side of the project. My partner has focused more heavily on communications and weather monitoring, so the project also forced us to define clean handoffs between the station network and the software consuming its data.",
+      diagramType: "linear",
       architecture: [
         "Weather stations",
         "Meshtastic mesh",
@@ -370,16 +375,104 @@ function CommitTimeline({ project }) {
   );
 }
 
-function SystemDiagram({ steps }) {
+function SystemDiagram({ project }) {
+  if (project.diagramType === "loop") {
+    const positions = [
+      { x: 18, y: 24 },
+      { x: 210, y: 24 },
+      { x: 402, y: 24 },
+      { x: 402, y: 236 },
+      { x: 210, y: 236 },
+      { x: 18, y: 236 },
+    ];
+
+    return (
+      <div className="loop-diagram">
+        <svg
+          className="loop-diagram-svg"
+          viewBox="0 0 600 330"
+          role="img"
+          aria-label={project.title + " feedback-loop architecture"}
+        >
+          <defs>
+            <marker
+              id={"arrow-" + project.slug}
+              markerWidth="8"
+              markerHeight="8"
+              refX="7"
+              refY="4"
+              orient="auto"
+              markerUnits="strokeWidth"
+            >
+              <path d="M0,0 L8,4 L0,8 z" className="loop-arrow-head" />
+            </marker>
+          </defs>
+
+          <path
+            className="loop-path"
+            markerEnd={"url(#arrow-" + project.slug + ")"}
+            d="M 188 54 L 210 54"
+          />
+          <path
+            className="loop-path"
+            markerEnd={"url(#arrow-" + project.slug + ")"}
+            d="M 380 54 L 402 54"
+          />
+          <path
+            className="loop-path"
+            markerEnd={"url(#arrow-" + project.slug + ")"}
+            d="M 487 84 C 535 108, 535 202, 487 236"
+          />
+          <path
+            className="loop-path"
+            markerEnd={"url(#arrow-" + project.slug + ")"}
+            d="M 402 266 L 380 266"
+          />
+          <path
+            className="loop-path"
+            markerEnd={"url(#arrow-" + project.slug + ")"}
+            d="M 210 266 L 188 266"
+          />
+          <path
+            className="loop-path loop-return-path"
+            markerEnd={"url(#arrow-" + project.slug + ")"}
+            d="M 103 236 C 44 205, 44 115, 103 84"
+          />
+
+          {project.architecture.map((step, index) => {
+            const position = positions[index];
+            return (
+              <g key={step} transform={"translate(" + position.x + " " + position.y + ")"}>
+                <rect className="loop-node" width="170" height="60" rx="11" />
+                <text className="loop-node-index" x="14" y="22">
+                  {String(index + 1).padStart(2, "0")}
+                </text>
+                <text className="loop-node-label" x="14" y="43">
+                  {step}
+                </text>
+              </g>
+            );
+          })}
+        </svg>
+        <div className="loop-caption">
+          <span className="loop-symbol">↺</span>
+          <p>{project.loopCaption}</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="system-diagram" aria-label="Project architecture diagram">
-      {steps.map((step, index) => (
+      {project.architecture.map((step, index) => (
         <div className="diagram-step-wrap" key={step}>
           <div className="diagram-step">
             <span>{String(index + 1).padStart(2, "0")}</span>
             <strong>{step}</strong>
           </div>
-          {index < steps.length - 1 ? <div className="diagram-arrow">→</div> : null}
+          {index < project.architecture.length - 1 ? (
+            <div className="diagram-arrow">→</div>
+          ) : null}
         </div>
       ))}
     </div>
@@ -418,7 +511,7 @@ function ProjectDetail({ project }) {
 
             <article className="overview-card diagram-card">
               <span className="mini-label">System diagram</span>
-              <SystemDiagram steps={project.architecture} />
+              <SystemDiagram project={project} />
             </article>
 
             <article className="overview-card learning-card">
