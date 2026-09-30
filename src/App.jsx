@@ -162,7 +162,8 @@ const featuredProjects = [
         "I learned that it is much easier to build a complicated system when I separate the interfaces between pieces. Using synthetic data first meant I could work on processing and visualization without waiting for every hardware component, and adding neighbor features made the value of a network of stations much clearer than treating each station independently.",
       contribution:
         "My main work has been on data processing and the software interfaces: the model baseline, feature pipeline, and mapping/visualization side of the project. My partner has focused more heavily on communications and weather monitoring, so the project also forced us to define clean handoffs between the station network and the software consuming its data.",
-      diagramType: "linear",
+      diagramType: "network",
+      networkCaption: "Multiple local stations contribute readings through the mesh, then the shared software pipeline turns those observations into spatial features, a short-term nowcast, and a map view.",
       architecture: [
         "Weather stations",
         "Meshtastic mesh",
@@ -376,6 +377,117 @@ function CommitTimeline({ project }) {
 }
 
 function SystemDiagram({ project }) {
+  if (project.diagramType === "network") {
+    return (
+      <div className="weather-network-diagram">
+        <svg
+          className="weather-network-svg"
+          viewBox="0 0 680 360"
+          role="img"
+          aria-label="Weather station network and nowcasting architecture"
+        >
+          <defs>
+            <marker
+              id={"weather-arrow-" + project.slug}
+              markerWidth="8"
+              markerHeight="8"
+              refX="7"
+              refY="4"
+              orient="auto"
+              markerUnits="strokeWidth"
+            >
+              <path d="M0,0 L8,4 L0,8 z" className="weather-arrow-head" />
+            </marker>
+          </defs>
+
+          <path className="mesh-link" d="M 92 74 L 222 148" />
+          <path className="mesh-link" d="M 92 180 L 222 148" />
+          <path className="mesh-link" d="M 92 286 L 222 148" />
+          <path className="mesh-link mesh-cross" d="M 92 74 L 92 180 L 92 286" />
+
+          <path
+            className="weather-flow"
+            markerEnd={"url(#weather-arrow-" + project.slug + ")"}
+            d="M 292 148 L 340 148"
+          />
+          <path
+            className="weather-flow"
+            markerEnd={"url(#weather-arrow-" + project.slug + ")"}
+            d="M 430 148 L 474 148"
+          />
+          <path
+            className="weather-flow"
+            markerEnd={"url(#weather-arrow-" + project.slug + ")"}
+            d="M 554 148 C 610 148, 612 212, 566 232"
+          />
+          <path
+            className="weather-flow"
+            markerEnd={"url(#weather-arrow-" + project.slug + ")"}
+            d="M 474 262 L 430 262"
+          />
+
+          <g transform="translate(30 44)">
+            <rect className="weather-station-node" width="124" height="58" rx="11" />
+            <text className="weather-node-index" x="14" y="21">S1</text>
+            <text className="weather-node-label" x="14" y="42">Local station</text>
+          </g>
+          <g transform="translate(30 150)">
+            <rect className="weather-station-node" width="124" height="58" rx="11" />
+            <text className="weather-node-index" x="14" y="21">S2</text>
+            <text className="weather-node-label" x="14" y="42">Local station</text>
+          </g>
+          <g transform="translate(30 256)">
+            <rect className="weather-station-node" width="124" height="58" rx="11" />
+            <text className="weather-node-index" x="14" y="21">S3</text>
+            <text className="weather-node-label" x="14" y="42">Local station</text>
+          </g>
+
+          <g transform="translate(206 118)">
+            <rect className="weather-mesh-node" width="102" height="60" rx="30" />
+            <text className="weather-node-label weather-node-center" x="51" y="27">Meshtastic</text>
+            <text className="weather-node-sub" x="51" y="44">mesh</text>
+          </g>
+
+          <g transform="translate(340 116)">
+            <rect className="weather-process-node" width="90" height="64" rx="11" />
+            <text className="weather-node-index" x="12" y="20">01</text>
+            <text className="weather-node-label" x="12" y="40">Data</text>
+            <text className="weather-node-sub-left" x="12" y="54">pipeline</text>
+          </g>
+
+          <g transform="translate(474 116)">
+            <rect className="weather-process-node" width="80" height="64" rx="11" />
+            <text className="weather-node-index" x="12" y="20">02</text>
+            <text className="weather-node-label" x="12" y="40">Spatial</text>
+            <text className="weather-node-sub-left" x="12" y="54">features</text>
+          </g>
+
+          <g transform="translate(486 230)">
+            <rect className="weather-nowcast-node" width="112" height="64" rx="11" />
+            <text className="weather-node-index" x="12" y="20">03</text>
+            <text className="weather-node-label" x="12" y="40">30-minute</text>
+            <text className="weather-node-sub-left" x="12" y="54">nowcast</text>
+          </g>
+
+          <g transform="translate(318 230)">
+            <rect className="weather-map-node" width="112" height="64" rx="11" />
+            <text className="weather-node-index" x="12" y="20">04</text>
+            <text className="weather-node-label" x="12" y="40">React +</text>
+            <text className="weather-node-sub-left" x="12" y="54">Leaflet map</text>
+          </g>
+
+          <text className="weather-side-label" x="30" y="334">distributed sensing</text>
+          <text className="weather-side-label" x="318" y="334">shared analysis + visualization</text>
+        </svg>
+
+        <div className="weather-caption">
+          <span className="weather-caption-symbol">⌁</span>
+          <p>{project.networkCaption}</p>
+        </div>
+      </div>
+    );
+  }
+
   if (project.diagramType === "loop") {
     const positions = [
       { x: 18, y: 24 },
