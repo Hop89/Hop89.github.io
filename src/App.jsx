@@ -18,6 +18,8 @@ const featuredProjects = [
         "As testing exposed edge cases, I moved more safeguards into the execution boundary: device scoping, sequence caps, cancellation, endpoint protection, and stricter firmware identification.",
       current:
         "The current system supports OpenAI and Ollama agents, multiple hardware adapters, trust levels, live traces, firmware tooling, and a public firmware SDK.",
+      future:
+        "Next I want to add persistent approval workflows, a cleaner versioned API, and better workflow-level tracking so multi-step agent runs are easier to audit and resume.",
       learned:
         "I learned that safety cannot live only in the prompt. The most important controls need to sit at the execution boundary where the model cannot bypass them. Building AgentBridge made me think of an AI model as an untrusted planner: useful for deciding what to try, but never the component that gets final authority over the hardware.",
       contribution:
@@ -124,6 +126,8 @@ const featuredProjects = [
         "Perimeter grew from a scan wrapper into a reporting system: readable output, risk scoring, structured reports, then historical comparisons and trend analysis.",
       current:
         "It now scores findings, flags misconfigurations, stores reports by IP, compares scans over time, and outputs readable text or JSON.",
+      future:
+        "Next I want to expose Perimeter through an API so agents or other systems can launch scans and consume structured results, with longer-term support for distributed monitoring nodes.",
       learned:
         "I learned that collecting more security data is not automatically useful. The harder engineering problem is preserving enough structure to compare scans, prioritize findings, and explain what changed. Adding historical reports pushed me to think about security as a changing system instead of a one-time snapshot.",
       contribution:
@@ -732,6 +736,14 @@ function ProjectDetail({ project }) {
                 <h3>What works now</h3>
                 <p>{project.current}</p>
               </article>
+
+              {project.future ? (
+                <article className="development-card">
+                  <span className="mini-label">Future</span>
+                  <h3>Next steps</h3>
+                  <p>{project.future}</p>
+                </article>
+              ) : null}
             </div>
 
             {project.outputExample ? <ExampleOutput example={project.outputExample} /> : null}
