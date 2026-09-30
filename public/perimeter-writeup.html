@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Perimeter — Full Project Writeup</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0a0d12;
+      --surface: #111722;
+      --line: #273142;
+      --text: #f4f7fb;
+      --muted: #a6b0bf;
+      --accent: #8fc7ff;
+      --critical: #ff8e8e;
+      --high: #ffc477;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 85% 8%, rgba(87,153,255,.12), transparent 30%),
+        var(--bg);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.68;
+    }
+    main {
+      width: min(860px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 48px 0 72px;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .back { display: inline-block; margin-bottom: 34px; color: var(--muted); font-size: .9rem; }
+    .kicker {
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      font-size: .72rem;
+      font-weight: 700;
+      margin: 0 0 10px;
+    }
+    h1, h2, h3 { font-family: Manrope, Inter, sans-serif; letter-spacing: -.025em; }
+    h1 { font-size: clamp(2.2rem, 6vw, 4.4rem); line-height: 1.02; margin: 0 0 18px; }
+    h2 { font-size: 1.5rem; margin: 0 0 14px; }
+    h3 { font-size: 1rem; margin: 22px 0 8px; }
+    .intro { color: var(--muted); font-size: 1.05rem; max-width: 760px; }
+    section { padding: 34px 0; border-top: 1px solid rgba(255,255,255,.08); }
+    section:first-of-type { border-top: 0; }
+    p { margin: 0 0 14px; }
+    ul { color: var(--muted); }
+    .architecture {
+      margin-top: 22px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255,255,255,.02);
+    }
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      align-items: stretch;
+    }
+    .node {
+      min-height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      text-align: center;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface);
+      font-size: .82rem;
+      font-weight: 650;
+    }
+    .flow-secondary {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    pre {
+      margin: 12px 0 0;
+      padding: 16px;
+      overflow-x: auto;
+      border: 1px solid #263244;
+      border-radius: 12px;
+      background: #080b10;
+      color: #b9c5d6;
+      font: .78rem/1.58 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      white-space: pre-wrap;
+    }
+    .critical { color: var(--critical); }
+    .high { color: var(--high); }
+    .source-note {
+      margin-top: 34px;
+      color: #718096;
+      font-size: .78rem;
+    }
+    @media (max-width: 700px) {
+      .flow, .flow-secondary { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="back" href="/#project/perimeter">← Back to Perimeter</a>
+    <p class="kicker">Full project writeup</p>
+    <h1>Perimeter: Network Security Analysis Tool</h1>
+
+    <section>
+      <h2>Overview</h2>
+      <p>Perimeter is a Python-based network security analysis tool designed to extend the capabilities of Nmap by transforming raw scan data into actionable insights. While Nmap is widely used for discovering hosts and services on a network, its output often requires significant expertise to interpret effectively. Perimeter addresses this gap by introducing an additional analysis layer that evaluates risk, detects misconfigurations, and tracks changes in network security posture over time.</p>
+      <p>Rather than replacing Nmap, Perimeter builds directly on top of it, using its scan results as a foundation for deeper analysis. The tool focuses on making network security data more accessible and useful, particularly for identifying vulnerabilities, prioritizing issues, and understanding how a system evolves across multiple scans.</p>
+    </section>
+
+    <section>
+      <h2>Project Motivation and Development</h2>
+      <p>I began developing Perimeter as part of my broader interest in cybersecurity and defensive systems. While working with network scanning tools, I noticed that although collecting data is relatively straightforward, interpreting that data in a meaningful way is much more difficult. Tools like Nmap provide detailed information about hosts and services, but they do not directly answer questions about risk, priority, or how a system’s security is changing over time.</p>
+      <p>I wanted to build a tool that could bridge this gap by automatically interpreting scan results and presenting them in a more actionable way. Initially, Perimeter started as a simple wrapper around Nmap, but as I continued developing it, I expanded it into a modular system with dedicated components for parsing, analysis, storage, and trend evaluation. This evolution reflects my shift from writing small scripts to designing a more complete and structured security tool.</p>
+    </section>
+
+    <section>
+      <h2>Technologies and Skills Developed</h2>
+      <p>Developing Perimeter allowed me to deepen my experience with Python while also learning how to integrate external system tools into a larger application. I worked extensively with Nmap as the underlying scanning engine, and one of the key technical challenges I addressed was parsing its XML output into structured data that could be analyzed programmatically.</p>
+      <p>Through this process, I gained experience in designing modular systems, where different components handle scanning, parsing, analysis, and storage independently. This improved both the maintainability and scalability of the project. I also developed a command-line interface that supports multiple workflows, which required thinking carefully about usability and how users would interact with the tool.</p>
+      <p>In addition, I explored integrating AI-based analysis to enhance the interpretation of findings. This introduced me to working with APIs and combining traditional software logic with machine learning–based insights. Overall, this project strengthened my skills in system design, data processing, and building practical cybersecurity tools.</p>
+    </section>
+
+    <section>
+      <h2>System Architecture</h2>
+      <p>Perimeter is organized as a collection of modular components, each responsible for a specific part of the workflow. The command-line interface serves as the entry point, allowing users to initiate scans, analyze results, and review trends. Behind the scenes, a dedicated module handles the execution of Nmap scans, while another parses the resulting XML data into structured formats.</p>
+      <p>The analysis layer is responsible for evaluating findings and assigning risk scores based on predefined criteria. Storage is handled separately, with reports organized by IP address and timestamp to support historical tracking. Finally, the trend analysis component compares reports over time to identify patterns, improvements, or regressions in security posture.</p>
+      <p>This modular structure ensures that each part of the system can be developed and tested independently, while still contributing to a cohesive overall workflow.</p>
+
+      <div class="architecture">
+        <p class="kicker">Architecture diagram (simplified)</p>
+        <div class="flow">
+          <div class="node">CLI<br />scan / analyze commands</div>
+          <div class="node">Nmap runner<br />executes scan</div>
+          <div class="node">XML parser<br />structured data</div>
+          <div class="node">Analysis / risk engine</div>
+        </div>
+        <div class="flow-secondary">
+          <div class="node">Report storage<br />IP + timestamp</div>
+          <div class="node">Trend comparison</div>
+          <div class="node">Historical reports<br />JSON by IP</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Features and Capabilities</h2>
+      <p>One of the central features of Perimeter is its ability to convert raw scan data into prioritized findings. Instead of presenting users with a list of open ports and services, the tool evaluates each result and assigns a level of severity. This allows users to quickly identify critical issues and focus their attention where it is most needed.</p>
+      <p>In addition to risk scoring, Perimeter includes mechanisms for detecting common misconfigurations, such as exposed services or unnecessary open ports. These checks help highlight potential weaknesses that may not be immediately obvious from the scan output alone.</p>
+      <p>Another key capability is the system’s support for historical tracking. Reports are stored in a structured format, allowing multiple scans of the same target to be compared over time. This enables users to observe how a network evolves, whether security measures are effective, and how changes impact overall risk.</p>
+      <p>Building on this, the trend analysis functionality provides a higher-level view of security posture. By comparing reports, the tool can identify new findings, resolved issues, and changes in severity. This makes it possible to detect both improvements and regressions, offering insight into the effectiveness of security practices.</p>
+      <p>An optional feature of the system is AI-assisted triage, which can be used to generate summaries and provide additional context for findings. While not required for core functionality, this feature enhances usability by making results easier to interpret and providing additional insight into vulnerabilities.</p>
+
+      <h3>Example Scan Command</h3>
+      <pre>perimeter scan --connected --output local_scan_1.xml
+Detected local IP: 10.33.4.52
+Host: 10.33.4.52 State: up Names: -
+ - 135/tcp open msrpc
+ - 139/tcp open netbios-ssn
+ - 139/tcp open netbios-ssn
+ - 139/tcp open netbios-ssn
+ - 445/tcp open microsoft-ds
+ - 3580/tcp open nati-svrloc
+ - 5800/tcp open vnc-http
+ - 5900/tcp open vnc</pre>
+
+      <h3>Example Analysis Command</h3>
+      <pre>perimeter analyze --latest
+Perimeter Analysis
+Hosts analyzed: 1
+Open ports analyzed: 6
+Findings by severity: critical=1, high=2, medium=0, low=3
+
+Top Findings:
+<span class="critical"> - [CRITICAL 95] 10.33.4.52 445/tcp microsoft-ds</span>
+   Rationale: SMB exposure is high-risk for lateral movement.
+   Remediation: Restrict network exposure, patch to latest stable release, and
+   require strong authentication.
+
+<span class="high"> - [HIGH 85] 10.33.4.52 139/tcp netbios-ssn</span>
+   Rationale: NetBIOS exposure can leak host and share information.
+   Remediation: Restrict network exposure, patch to latest stable release, and
+   require strong authentication.
+
+<span class="high"> - [HIGH 85] 10.33.4.52 5900/tcp vnc</span>
+   Rationale: Legacy remote access protocol may be insecure by default.
+   Remediation: Restrict network exposure, patch to latest stable release, and
+   require strong authentication.
+
+ - [LOW 35] 10.33.4.52 135/tcp msrpc
+   Rationale: Open service detected; verify necessity and patch status.
+   Remediation: Restrict network exposure, patch to latest stable release, and
+   require strong authentication.
+
+ - [LOW 35] 10.33.4.52 3580/tcp nati-svrloc
+ - [LOW 35] 10.33.4.52 5800/tcp vnc-http
+   Rationale: Open service detected; verify necessity and patch status.
+   Remediation: Restrict network exposure, patch to latest stable release, and
+   require strong authentication.</pre>
+    </section>
+
+    <section>
+      <h2>Challenges and Solutions</h2>
+      <p>One of the main challenges I encountered was parsing the XML output generated by Nmap. The structure of the data is complex and nested, which made it difficult to extract only the relevant information in a clean and consistent format. I addressed this by building a dedicated parsing module that converts the XML into structured Python objects, making it easier to work with in later stages of the pipeline.</p>
+      <p>Another challenge was designing a risk scoring system that is both meaningful and interpretable. I needed a way to prioritize findings without making the system overly complicated or opaque. I approached this by creating a deterministic scoring model based on known high-risk services and common misconfigurations, and then refining it through testing.</p>
+      <p>I also found that implementing historical tracking and trend analysis required careful consideration of how data should be stored and compared over time. To solve this, I designed a report storage system organized by IP address and timestamp, which made it possible to efficiently compare scans and identify changes in security posture.</p>
+    </section>
+
+    <section>
+      <h2>Future Development</h2>
+      <p>A direction I am interested in exploring is enabling Perimeter to be used as part of larger, automated systems, particularly those involving AI agents. Rather than functioning only as a standalone command-line tool, Perimeter could be extended into a service that exposes its capabilities through an API or lightweight interface.</p>
+      <p>This would allow external systems or AI agents to programmatically initiate scans, retrieve structured analysis results, and incorporate those results into broader workflows. For example, an AI-driven system could use Perimeter to continuously monitor a network, interpret changes in security posture, and make higher-level decisions based on that data.</p>
+      <p>I am also interested in deploying Perimeter across multiple pieces of hardware, such as small embedded systems or distributed nodes, allowing it to operate as part of a larger, decentralized monitoring network. In this model, individual devices could perform localized scans and send results to a central system for aggregation and analysis. This would make the tool more scalable and applicable to real-world environments where monitoring is distributed rather than centralized.</p>
+      <p>Overall, this direction would shift Perimeter from a standalone analysis tool toward a more flexible and extensible component within larger security and automation systems.</p>
+    </section>
+
+    <section>
+      <h2>Conclusion</h2>
+      <p>Perimeter represents an effort to move beyond raw data collection and toward meaningful interpretation in the context of network security. By combining established tools like Nmap with custom analysis and tracking capabilities, it demonstrates how software can be used to simplify complex technical processes and support better decision-making.</p>
+      <p>The project reflects my broader interest in cybersecurity, systems design, and practical problem-solving. It also serves as a foundation for future work in developing tools that make security analysis more accessible, scalable, and effective.</p>
+    </section>
+
+    <p class="source-note">Browser-friendly version of the full Perimeter project writeup.</p>
+  </main>
+</body>
+</html>
