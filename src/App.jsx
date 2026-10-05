@@ -795,7 +795,7 @@ function ProjectDetail({ project }) {
               <SystemDiagram project={project} />
             </article>
 
-            <article className="overview-card iteration-card">
+            <article className="overview-card case-study-card">
               <span className="mini-label">Testing & iteration</span>
               <h3>{project.caseStudy.title}</h3>
               <p><strong>The constraint:</strong> {project.caseStudy.problem}</p>
