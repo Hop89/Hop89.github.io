@@ -11,7 +11,7 @@ const featuredProjects = [
       description:
         "A capability-based framework that lets AI agents interact with real hardware through a controlled execution layer instead of raw device access.",
       problem:
-        "The core problem is not simply getting an AI model to control hardware; it is deciding what the model is allowed to do when its output can affect a real device. I built AgentBridge around the idea that the model should request narrowly defined capabilities while deterministic host code handles discovery, policy, execution, and logging.",
+        "AI-generated commands should not have unrestricted access to physical devices. I built a capability interface that lets models request actions while host-side code controls authorization and execution.",
       design:
         "I separated planning from execution: agents request typed capabilities, while AgentBridge handles discovery, policy, hardware access, and logging.",
       iteration:
@@ -21,9 +21,9 @@ const featuredProjects = [
       future:
         "Next I want to add persistent approval workflows, a cleaner versioned API, and better workflow-level tracking so multi-step agent runs are easier to audit and resume.",
       learned:
-        "I learned that safety cannot live only in the prompt. The most important controls need to sit at the execution boundary where the model cannot bypass them. Building AgentBridge made me think of an AI model as an untrusted planner: useful for deciding what to try, but never the component that gets final authority over the hardware.",
+        "I learned to treat a model as an untrusted planner: the critical protections belong in host code, not in instructions the model might ignore.",
       contribution:
-        "I designed and implemented the core architecture of AgentBridge, including the agent execution pipeline, hardware abstraction layer, capability system, and safety controls. The project focuses on enabling AI systems to interact with physical devices while maintaining predictable boundaries, controlled access, and traceable execution.",
+        "I chose typed device capabilities and deterministic policy checks over giving models raw serial access. This adds a layer of implementation work for each adapter, but makes access limits enforceable independently of the model and keeps action traces consistent.",
       diagramType: "loop",
       loopCaption: "Results and live traces return to the agent, which can decide on the next permitted action.",
       architecture: [
@@ -35,14 +35,14 @@ const featuredProjects = [
         "Result + trace",
       ],
       artifacts: [
-        { label: "Host runtime", detail: "Private main repository containing the agent runtime, GUI, CLI, policy layer, adapters, and tests." },
-        { label: "Firmware SDK", detail: "Public Arduino and MicroPython SDK implementing the three-message AgentBridge serial protocol.", url: "https://github.com/Hop89/agentbridge-firmware-sdk" },
-        { label: "Security model", detail: "Device scoping, trust levels, cancellation, sequence caps, and provider endpoint protections." },
+        { label: "Firmware SDK and protocol", detail: "Public implementation of the serial message protocol for Arduino and MicroPython.", url: "https://github.com/Hop89/agentbridge-firmware-sdk" },
+        { label: "Example firmware implementations", detail: "Public SDK example programs and device integrations.", url: "https://github.com/Hop89/agentbridge-firmware-sdk/tree/main/examples" },
+        { label: "Host framework", detail: "The main source repository and hardware traces remain private; the response shown above is a documented format, not a recorded test." },
       ],
       outputExample: {
-        kicker: "Example response format",
-        title: "A policy-gated hardware action",
-        command: 'python -m agentbridge.cli ask --port COM4 "what is the flipper uptime?"',
+        kicker: "Documented response schema",
+        title: "What an action result looks like",
+        command: "device=flipper.zero.cli  capability=system.uptime",
         output: `{
   "request_id": "req_123",
   "status": "completed",
@@ -55,8 +55,21 @@ const featuredProjects = [
     }
   }
 }`,
-        note: "The command comes from the current Flipper quick start. The JSON is the documented structured ActionResult format rather than a captured hardware run.",
+        note: "Illustrative response from the design documentation—not a captured hardware run or proof of test success. The actual CLI and GUI can run safe read-only capabilities.",
       },
+      evidenceStatus: "Documented interface · hardware demo not published",
+      evidenceIntro: "A concrete illustration of the policy-gated result structure. It is not a recorded test: the hardware project is operated locally and its main repository is private.",
+      caseStudy: {
+        title: "Enforcing device scope twice",
+        problem: "Filtering the agent's visible device list was not enough to guarantee isolation at execution time.",
+        change: "I added allowed-device checks inside the runtime's device lookup, so a request for another device is rejected even when the registry is refreshed.",
+        proof: "Recorded in the May 4 device-scoping implementation and follow-up fix.",
+      },
+      milestones: [
+        { sha: "422f827f6a20ece3cb4fbc7c839741370ee7b0fd", title: "Initial operator interfaces", detail: "CLI and local GUI added on top of the adapter layer." },
+        { sha: "104189448ae62521ee0210422b81335c26b8e59d", title: "Execution boundary hardened", detail: "Device scopes enforced during lookup, not just discovery." },
+        { sha: "fb8f244c9e152ca97bc509cacf1b2d20221dc787", title: "Device ecosystem expanded", detail: "Adapter manifests and hardware identification added." },
+      ],
       staticCommits: [
         { sha: "1b23464b982fc8ed92cf32d5fe64ed6798dd303f", message: "Extract shared probe_serial_port helper and deduplicate CLI/GUI probe paths", date: "2026-05-16T01:22:32Z" },
         { sha: "868d923d16cb0f19cd6642b1f4c307ee158dfb39", message: "Add --name flag to adapter create for clean firmware directory names", date: "2026-05-13T14:03:00Z" },
@@ -119,7 +132,7 @@ const featuredProjects = [
       description:
         "An Nmap-powered network analysis tool that turns raw scan results into prioritized risk information, readable reports, and historical security trends.",
       problem:
-        "Nmap is very good at collecting network information, but raw ports and service data still leave the user with the harder question: what matters, what changed, and what should I fix first? I built Perimeter to add that interpretation layer rather than trying to replace the scanner itself.",
+        "Nmap collects network information, but a port list alone cannot show which issues matter or what changed. Perimeter adds risk interpretation, per-host reports, and comparisons between scans.",
       design:
         "I split scanning, XML parsing, risk analysis, report storage, and trend comparison into separate modules so each stage could be tested independently.",
       iteration:
@@ -129,9 +142,9 @@ const featuredProjects = [
       future:
         "Next I want to expose Perimeter through an API so agents or other systems can launch scans and consume structured results, with longer-term support for distributed monitoring nodes.",
       learned:
-        "I learned that collecting more security data is not automatically useful. The harder engineering problem is preserving enough structure to compare scans, prioritize findings, and explain what changed. Adding historical reports pushed me to think about security as a changing system instead of a one-time snapshot.",
+        "I learned that preserving structured, comparable evidence matters more than simply collecting more scan output.",
       contribution:
-        "I designed and built Perimeter as a complete security analysis workflow, from Nmap integration and XML parsing through risk scoring, report storage, and historical comparison. The project focuses on transforming raw network data into prioritized security insights that are easier to understand and act on.",
+        "Rather than replace a mature scanner, I built on Nmap and separated the parser, deterministic scoring, storage, and comparison modules. Organizing reports by target IP made longitudinal analysis possible without mixing findings from different machines.",
       diagramType: "loop",
       loopCaption: "Each later scan is compared with stored history, so the output informs what to investigate and scan again.",
       architecture: [
@@ -143,16 +156,16 @@ const featuredProjects = [
         "Next scan",
       ],
       artifacts: [
-        { label: "GitHub repository", detail: "Public source code, README, and commit history.", url: "https://github.com/Hop89/Perimeter" },
-        { label: "Full project writeup", detail: "Full writeup covering motivation, architecture, capabilities, example output, challenges, and future development.", url: "/perimeter-writeup.html" },
-        { label: "Historical reports", detail: "Timestamped reports organized by target IP for comparison." },
-        { label: "Trend engine", detail: "Tracks open-port deltas, severity changes, new findings, and resolved findings." },
+        { label: "Source code", detail: "Public CLI, analysis pipeline, and development history.", url: "https://github.com/Hop89/Perimeter" },
+        { label: "Full project writeup", detail: "Original narrative, historical scan excerpt, and technical architecture.", url: "/perimeter-writeup.html" },
+        { label: "Trend comparison code", detail: "Implementation of changed, new, and resolved finding detection.", url: "https://github.com/Hop89/Perimeter/blob/main/src/perimeter/trend.py" },
+        { label: "Verification tests", detail: "Source tests for target-scoped reports, IPv6, and same-second report naming.", url: "https://github.com/Hop89/Perimeter/blob/main/tests/verification.py" },
       ],
       outputExample: {
         kicker: "Captured example",
         title: "Prioritized analysis from a local scan",
         command: `perimeter scan --connected --output local_scan_1.xml
-perimeter analyze --latest`,
+perimeter analyze reports/local_scan_1.xml`,
         output: `Perimeter Analysis
 Hosts analyzed: 1
 Open ports analyzed: 6
@@ -166,8 +179,22 @@ and require strong authentication.
 
 [HIGH 85] 10.33.4.52 139/tcp netbios-ssn
 [HIGH 85] 10.33.4.52 5900/tcp vnc`,
-        note: "Excerpt from an actual Perimeter analysis included in my project writeup.",
+        note: "Historical captured findings from the project writeup, paired with current CLI syntax. The old writeup's --latest flag is no longer supported.",
       },
+      evidenceStatus: "Captured local output · early development",
+      evidenceIntro: "Earlier local analysis of one host. The recorded findings are retained from my writeup; the commands below use the current version's XML path.",
+      caseStudy: {
+        title: "Avoiding mixed or overwritten reports",
+        problem: "Multi-host scan summaries were difficult to compare as one combined record, and report filenames could collide when two saves occurred in the same second.",
+        change: "Reports became target-specific and the file naming gained sub-second precision. The source tests check that reports stay scoped to one host and that same-second saves create distinct files.",
+        proof: "Automated verification cases in the public tests/verification.py file.",
+        url: "https://github.com/Hop89/Perimeter/blob/main/tests/verification.py",
+      },
+      milestones: [
+        { sha: "c3d2d4048dc1122fec370311da1c39c1b0f38b3d", title: "Readable scanning", detail: "Local-interface scan mode and formatted output." },
+        { sha: "dce68a57971fdba0ed0254f97bea6059dfd5273d", title: "Reports made persistent", detail: "Scan results moved into stored reports." },
+        { sha: "c9b29e698243677803acc4f1f79cf9153c199c4a", title: "Longitudinal comparison", detail: "Target-level trends and diffs added." },
+      ],
       staticCommits: [
         { sha: "c9b29e698243677803acc4f1f79cf9153c199c4a", message: "Allowed comparison of trends for target IPs", date: "2026-03-23T09:43:53Z", url: "https://github.com/Hop89/Perimeter/commit/c9b29e698243677803acc4f1f79cf9153c199c4a" },
         { sha: "6bfd0eea64ad1f45c428481dd0fd351146e004d6", message: "Update README: correct CLI command, add installation, change planned features to features", date: "2026-03-19T16:18:51Z", url: "https://github.com/Hop89/Perimeter/commit/6bfd0eea64ad1f45c428481dd0fd351146e004d6" },
@@ -192,21 +219,23 @@ and require strong authentication.
       repo: "Hop89/Think---Nowcasting",
       repoVisibility: "private",
       description:
-        "A low-cost hyperlocal weather system that combines portable stations, mesh communications, a nowcasting model, and a map interface.",
+        "A prototype for low-cost hyperlocal weather sensing, with a synthetic-data nowcasting baseline and multi-station visualization.",
       problem:
-        "The project is built around a simple limitation: weather can change over distances much smaller than the spacing between conventional observations. We wanted a system that could collect local station data, move it without depending on normal infrastructure, and turn it into a useful view of nearby conditions.",
+        "Local storms can vary over distances smaller than conventional weather-station spacing. We explored portable sensing and mesh communication, while developing software to combine station observations into short-term rain predictions.",
       design:
         "I built the software around minute-level station data, a 30-minute logistic-regression baseline, spatial neighbor features, and a React + Leaflet map.",
       iteration:
-        "Using synthetic data first let me debug the pipeline before the hardware was ready. I then added neighbor features, Meshtastic integration, and a multi-station map.",
+        "I started with synthetic observations so feature engineering and visualization could proceed before field data was available. Subsequent work added haversine-based neighbor features and multi-station mapping.",
       current:
-        "The current code can generate multi-station data, train the baseline, produce rain probabilities, and display station state on the map.",
+        "The code generates synthetic observations, trains a logistic-regression baseline, computes station rain probabilities, and renders them on a multi-station Leaflet map. Field-validation metrics are not yet established here.",
+      future:
+        "Replace sample data with instrumented station readings, validate labels against weather observations, and measure calibration and predictive accuracy before deployment.",
       learned:
-        "I learned that it is much easier to build a complicated system when I separate the interfaces between pieces. Using synthetic data first meant I could work on processing and visualization without waiting for every hardware component, and adding neighbor features made the value of a network of stations much clearer than treating each station independently.",
+        "Separating the software pipeline from hardware availability let us test assumptions sooner, and neighbor features helped connect local readings into a network model.",
       contribution:
         "My main work has been on data processing and the software interfaces: the model baseline, feature pipeline, and mapping/visualization side of the project. My partner has focused more heavily on communications and weather monitoring, so the project also forced us to define clean handoffs between the station network and the software consuming its data.",
       diagramType: "network",
-      networkCaption: "Multiple local stations contribute readings through the mesh, then the shared software pipeline turns those observations into spatial features, a short-term nowcast, and a map view.",
+      networkCaption: "Proposed end-to-end system. The software baseline and map run on synthetic station readings; live network integration and field validation are separate tasks.",
       architecture: [
         "Weather stations",
         "Meshtastic mesh",
@@ -216,9 +245,22 @@ and require strong authentication.
         "React + Leaflet map",
       ],
       artifacts: [
-        { label: "Development repository", detail: "Private project repository used for the MIT THINK work." },
-        { label: "Model baseline", detail: "Logistic-regression pipeline using the previous 60 minutes of station signals." },
-        { label: "Visualization", detail: "Leaflet/React map with multi-station support and nowcast display." },
+        { label: "Synthetic Leaflet prototype", detail: "Archived output generated by the project from sample station data, not live observations.", url: "/weather-synthetic-leaflet-demo.html" },
+        { label: "Model and station software", detail: "The weather-station repository is private; source includes baseline training, feature generation, and visualization code." },
+      ],
+      evidenceStatus: "Synthetic-data model · field evaluation pending",
+      evidenceIntro: "An archived interactive map generated from the project's sample station readings. This is an early Folium/Leaflet output, distinct from the later React frontend—not a live station deployment.",
+      demoUrl: "/weather-synthetic-leaflet-demo.html",
+      caseStudy: {
+        title: "Developing before field data existed",
+        problem: "Station hardware and communication work was moving in parallel with the software; waiting for a full physical network would have blocked model testing.",
+        change: "I used synthetic minute-level observations to validate feature generation, baseline predictions, and map output before connecting real data. Field accuracy and reliability remain to be measured.",
+        proof: "The synthetic data generator, model baseline, and early Leaflet output are documented in the project repository.",
+      },
+      milestones: [
+        { sha: "4ff7b6962e344eee5b8115df524e7eb37228fc9d", title: "Working baseline", detail: "Synthetic data and short-range rain model initialized." },
+        { sha: "6144f25687a92aa071afd16c2fdac5dcdcef18c3", title: "Spatial features", detail: "Haversine nearest-neighbor aggregation added." },
+        { sha: "b42ce97490bf5c106da2db254f7d924992323c94", title: "Map interface", detail: "React/Leaflet frontend with multi-station flow." },
       ],
       staticCommits: [
         { sha: "b42ce97490bf5c106da2db254f7d924992323c94", message: "Add React Leaflet frontend with station add flow", date: "2025-12-24T15:34:17Z" },
@@ -375,9 +417,30 @@ function CommitTimeline({ project }) {
         <span className="legend-docs">Docs</span>
       </div>
 
-      <div className="commit-graph">
-        <div className="commit-line" />
-        {commits.map((commit) => {
+      <div className="milestone-panel">
+        <span className="mini-label">Selected milestones</span>
+        {project.milestones?.map((milestone) => {
+          const matched = commits.find((item) => item.sha === milestone.sha);
+          const content = (
+            <>
+              <span className="milestone-date">{matched ? formatDate(matched.date) : ""}</span>
+              <strong>{milestone.title}</strong>
+              <span>{milestone.detail}</span>
+            </>
+          );
+          return matched?.url ? (
+            <a href={matched.url} target="_blank" rel="noreferrer" key={milestone.sha}>{content}</a>
+          ) : (
+            <div key={milestone.sha}>{content}</div>
+          );
+        })}
+      </div>
+
+      <details className="full-history">
+        <summary>Browse full commit history ({commits.length})</summary>
+        <div className="commit-graph">
+          <div className="commit-line" />
+          {commits.map((commit) => {
           const kind = commitKind(commit.message);
           const body = (
             <>
@@ -407,8 +470,9 @@ function CommitTimeline({ project }) {
               {body}
             </div>
           );
-        })}
-      </div>
+          })}
+        </div>
+      </details>
 
       <p className="commit-note">
         {project.repoVisibility === "public"
@@ -640,7 +704,7 @@ function ExampleOutput({ example }) {
       <div className="example-output-heading">
         <div>
           <span className="mini-label">{example.kicker}</span>
-          <h3>{example.title}</h3>
+          <h3>{example.kicker === "Documented response schema" ? "Illustrative JSON response" : "Archived local scan excerpt"}</h3>
         </div>
         <span className="example-output-badge">CLI / output</span>
       </div>
@@ -655,7 +719,7 @@ function ExampleOutput({ example }) {
         <div className="terminal-command">
           {example.command.split("\n").map((line) => (
             <div key={line}>
-              <span className="terminal-prompt">$</span> {line}
+              <span className="terminal-prompt">{example.kicker === "Documented response schema" ? "›" : "$"}</span> {line}
             </div>
           ))}
         </div>
@@ -664,6 +728,37 @@ function ExampleOutput({ example }) {
 
       <p className="example-output-note">{example.note}</p>
     </article>
+  );
+}
+
+function ProjectProof({ project }) {
+  return (
+    <section className="project-proof" aria-label="Project output and evidence">
+      <div className="project-proof-head">
+        <div>
+          <p className="section-kicker">Output & evidence</p>
+          <h2>{project.outputExample ? project.outputExample.title : "Generated station map"}</h2>
+        </div>
+        <span className="proof-status">{project.evidenceStatus}</span>
+      </div>
+      <p className="proof-intro">{project.evidenceIntro}</p>
+      {project.outputExample ? (
+        <ExampleOutput example={project.outputExample} />
+      ) : project.demoUrl ? (
+        <div className="map-proof">
+          <iframe
+            src={project.demoUrl}
+            title="Archived synthetic-data weather station map"
+            loading="lazy"
+            referrerPolicy="no-referrer"
+          />
+          <div className="map-proof-footer">
+            <span>Early Leaflet prototype · synthetic observations</span>
+            <a href={project.demoUrl} target="_blank" rel="noreferrer">Open full map ↗</a>
+          </div>
+        </div>
+      ) : null}
+    </section>
   );
 }
 
@@ -683,15 +778,13 @@ function ProjectDetail({ project }) {
           <p className="section-kicker">Featured project {project.number}</p>
           <h1>{project.title}</h1>
           <p className="project-detail-tags">{project.tags}</p>
+          <p className="project-lead">{project.description}</p>
         </section>
+
+        <ProjectProof project={project} />
 
         <section className="project-overview-grid">
           <div className="overview-left">
-            <article className="overview-card">
-              <span className="mini-label">Description</span>
-              <p className="overview-description">{project.description}</p>
-            </article>
-
             <article className="overview-card">
               <span className="mini-label">Problem solved</span>
               <p className="overview-description">{project.problem}</p>
@@ -700,6 +793,20 @@ function ProjectDetail({ project }) {
             <article className="overview-card diagram-card">
               <span className="mini-label">System diagram</span>
               <SystemDiagram project={project} />
+            </article>
+
+            <article className="overview-card iteration-card">
+              <span className="mini-label">Testing & iteration</span>
+              <h3>{project.caseStudy.title}</h3>
+              <p><strong>The constraint:</strong> {project.caseStudy.problem}</p>
+              <p><strong>What I changed:</strong> {project.caseStudy.change}</p>
+              {project.caseStudy.url ? (
+                <a className="case-source" href={project.caseStudy.url} target="_blank" rel="noreferrer">
+                  {project.caseStudy.proof} ↗
+                </a>
+              ) : (
+                <p className="case-source-text">{project.caseStudy.proof}</p>
+              )}
             </article>
 
             <article className="overview-card learning-card">
@@ -717,7 +824,7 @@ function ProjectDetail({ project }) {
             <h2>Development & Evolution</h2>
           </div>
 
-          <div className={"development-layout " + (project.outputExample ? "has-output" : "")}>
+          <div className="development-layout">
             <div className="development-grid">
               <article className="development-card">
                 <span className="mini-label">Design</span>
@@ -746,7 +853,6 @@ function ProjectDetail({ project }) {
               ) : null}
             </div>
 
-            {project.outputExample ? <ExampleOutput example={project.outputExample} /> : null}
           </div>
         </section>
 
