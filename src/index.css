@@ -1828,3 +1828,21 @@ a.commit-row:hover {
   .map-proof iframe { height: 280px; }
   .development-grid { grid-template-columns: 1fr; }
 }
+
+
+/* Side-by-side real Perimeter scan and trend outputs */
+.proof-examples-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 14px;
+}
+.proof-examples-grid .example-output-card { min-width: 0; }
+.proof-examples-grid .terminal-output {
+  overflow: auto;
+  max-height: 380px;
+  white-space: pre;
+}
+@media (max-width: 850px) {
+  .proof-examples-grid { grid-template-columns: 1fr; }
+}
