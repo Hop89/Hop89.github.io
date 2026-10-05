@@ -162,27 +162,59 @@ const featuredProjects = [
         { label: "Verification tests", detail: "Source tests for target-scoped reports, IPv6, and same-second report naming.", url: "https://github.com/Hop89/Perimeter/blob/main/tests/verification.py" },
       ],
       outputExample: {
-        kicker: "Captured example",
-        title: "Prioritized analysis from a local scan",
-        command: `perimeter scan --connected --output local_scan_1.xml
-perimeter analyze reports/local_scan_1.xml`,
-        output: `Perimeter Analysis
+        kicker: "Captured Oct 5, 2026",
+        heading: "Stored scan and prioritized findings",
+        title: "Local analysis with persistent reports",
+        command: `perimeter analyze reports/local_scan_1.xml --store-report`,
+        output: `Report stored for 10.33.4.52:
+reports\\10.33.4.52\\report_20261005_162057_859824.json
+
+Perimeter Analysis
 Hosts analyzed: 1
 Open ports analyzed: 6
 Findings by severity: critical=1, high=2, medium=0, low=3
 
 Top Findings:
 [CRITICAL 95] 10.33.4.52 445/tcp microsoft-ds
-Rationale: SMB exposure is high-risk for lateral movement.
-Remediation: Restrict network exposure, patch to latest stable release,
-and require strong authentication.
-
+  SMB exposure is high-risk for lateral movement.
 [HIGH 85] 10.33.4.52 139/tcp netbios-ssn
-[HIGH 85] 10.33.4.52 5900/tcp vnc`,
-        note: "Historical captured findings from the project writeup, paired with current CLI syntax. The old writeup's --latest flag is no longer supported.",
+  NetBIOS exposure can leak host and share information.
+[HIGH 85] 10.33.4.52 5900/tcp vnc
+  Legacy remote access protocol may be insecure by default.
+[LOW 35] 10.33.4.52 135/tcp msrpc
+[LOW 35] 10.33.4.52 3580/tcp nati-svrloc
+[LOW 35] 10.33.4.52 5800/tcp vnc-http
+
+Reports stored for 1 IP(s)`,
+        note: "Transcribed from a real local CLI run. Rationale text is shortened in this preview; the original trace and writeup contain the full messages. These are risk heuristics, not confirmation of exploitable vulnerabilities.",
       },
-      evidenceStatus: "Captured local output · early development",
-      evidenceIntro: "Earlier local analysis of one host. The recorded findings are retained from my writeup; the commands below use the current version's XML path.",
+      secondExample: {
+        kicker: "Captured Oct 5, 2026",
+        heading: "Two scans, stable security posture",
+        title: "Historical comparison of two saved reports",
+        command: `perimeter analyze --latest --store-report
+perimeter trend 10.33.4.52`,
+        output: `Report stored for 10.33.4.52:
+reports\\10.33.4.52\\report_20261005_162118_228047.json
+
+Perimeter Trend Analysis for 10.33.4.52
+Reports analyzed: 2
+Period:
+2026-10-05T16:20:57.859824
+  → 2026-10-05T16:21:18.228047
+
+Security Posture: STABLE
+Open Ports Delta: +0
+
+Severity Trend:
+  Critical: 1 → 1 +0
+  High:     2 → 2 +0
+  Medium:   0 → 0 +0
+  Low:      3 → 3 +0`,
+        note: "Real results from two runs 20 seconds apart. The test confirms report persistence and a stable comparison; it does not demonstrate detection of new or resolved vulnerabilities. The installed local CLI supports --latest, but this option is absent from the currently published GitHub CLI source.",
+      },
+      evidenceStatus: "Two captured scans · Oct 2026",
+      evidenceIntro: "Two local scans of the same host produced six ranked findings each. The second saved report was compared against the first, correctly showing no observed change over 20 seconds.",
       caseStudy: {
         title: "Avoiding mixed or overwritten reports",
         problem: "Multi-host scan summaries were difficult to compare as one combined record, and report filenames could collide when two saves occurred in the same second.",
@@ -704,7 +736,7 @@ function ExampleOutput({ example }) {
       <div className="example-output-heading">
         <div>
           <span className="mini-label">{example.kicker}</span>
-          <h3>{example.kicker === "Documented response schema" ? "Illustrative JSON response" : "Archived local scan excerpt"}</h3>
+          <h3>{example.heading || (example.kicker === "Documented response schema" ? "Illustrative JSON response" : "Local CLI output")}</h3>
         </div>
         <span className="example-output-badge">CLI / output</span>
       </div>
@@ -743,7 +775,10 @@ function ProjectProof({ project }) {
       </div>
       <p className="proof-intro">{project.evidenceIntro}</p>
       {project.outputExample ? (
-        <ExampleOutput example={project.outputExample} />
+        <div className={project.secondExample ? "proof-examples-grid" : ""}>
+          <ExampleOutput example={project.outputExample} />
+          {project.secondExample ? <ExampleOutput example={project.secondExample} /> : null}
+        </div>
       ) : project.demoUrl ? (
         <div className="map-proof">
           <iframe
