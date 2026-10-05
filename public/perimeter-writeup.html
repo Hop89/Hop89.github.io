@@ -175,7 +175,10 @@ Host: 10.33.4.52 State: up Names: -
  - 5800/tcp open vnc-http
  - 5900/tcp open vnc</pre>
 
-      <h3>Example Analysis Command</h3>
+      <aside style="border:1px solid #35516b;background:rgba(143,199,255,.06);padding:12px 14px;border-radius:10px;margin:18px 0;color:var(--muted);font-size:.86rem;">
+        <strong style="color:var(--text)">Command update:</strong> The scan and report below are preserved from the original project writeup. The older <code>perimeter analyze --latest</code> command is not part of the current CLI. The equivalent current workflow uses <code>perimeter scan --connected --output local_scan_1.xml</code> and then <code>perimeter analyze reports/local_scan_1.xml</code>. The saved scan summary below also reflects the earlier version.
+      </aside>
+      <h3>Example Analysis Command (original captured version)</h3>
       <pre>perimeter analyze --latest
 Perimeter Analysis
 Hosts analyzed: 1
