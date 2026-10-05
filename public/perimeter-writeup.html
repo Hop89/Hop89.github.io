@@ -176,7 +176,7 @@ Host: 10.33.4.52 State: up Names: -
  - 5900/tcp open vnc</pre>
 
       <aside style="border:1px solid #35516b;background:rgba(143,199,255,.06);padding:12px 14px;border-radius:10px;margin:18px 0;color:var(--muted);font-size:.86rem;">
-        <strong style="color:var(--text)">Command update:</strong> The scan and report below are preserved from the original project writeup. The older <code>perimeter analyze --latest</code> command is not part of the current CLI. The equivalent current workflow uses <code>perimeter scan --connected --output local_scan_1.xml</code> and then <code>perimeter analyze reports/local_scan_1.xml</code>. The saved scan summary below also reflects the earlier version.
+        <strong style="color:var(--text)">Command update:</strong> The scan and report below are preserved from the original project writeup. The <code>--latest</code> flag is absent from the published GitHub CLI parser, but was successfully used in a later local installation on October 5, 2026. To reproduce the workflow from the public source, pass an explicit XML path instead. The equivalent current workflow uses <code>perimeter scan --connected --output local_scan_1.xml</code> and then <code>perimeter analyze reports/local_scan_1.xml</code>. The saved scan summary below also reflects the earlier version.
       </aside>
       <h3>Example Analysis Command (original captured version)</h3>
       <pre>perimeter analyze --latest
@@ -232,6 +232,26 @@ Top Findings:
       <h2>Conclusion</h2>
       <p>Perimeter represents an effort to move beyond raw data collection and toward meaningful interpretation in the context of network security. By combining established tools like Nmap with custom analysis and tracking capabilities, it demonstrates how software can be used to simplify complex technical processes and support better decision-making.</p>
       <p>The project reflects my broader interest in cybersecurity, systems design, and practical problem-solving. It also serves as a foundation for future work in developing tools that make security analysis more accessible, scalable, and effective.</p>
+    </section>
+
+    <section>
+      <p class="kicker">Later validation · October 5, 2026</p>
+      <h2>Verifying Stored Reports and Trend Analysis</h2>
+      <p>During a later local test, I ran Perimeter twice against the same host and stored two reports. The CLI recorded one report at 16:20:57 and a second at 16:21:18. Both runs identified six open services and the same severity distribution (one critical, two high, and three low). The subsequent trend command analyzed both stored reports.</p>
+      <pre>perimeter trend 10.33.4.52
+Perimeter Trend Analysis for 10.33.4.52
+Reports analyzed: 2
+Period: 2026-10-05T16:20:57.859824 → 2026-10-05T16:21:18.228047
+
+Security Posture: STABLE
+Open Ports Delta: +0
+
+Severity Trend:
+  Critical: 1 → 1 +0
+  High: 2 → 2 +0
+  Medium: 0 → 0 +0
+  Low: 3 → 3 +0</pre>
+      <p>This captured result demonstrates that the local installation stored and compared two reports without indicating a change in exposure. Since the host configuration remained stable, the test does <strong>not</strong> demonstrate detection of new or resolved issues. The local installation also accepted <code>perimeter analyze --latest --store-report</code>; the published GitHub CLI parser currently requires an XML path instead. This validation was added after the original writeup.</p>
     </section>
 
     <p class="source-note">Browser-friendly version of the full Perimeter project writeup.</p>
