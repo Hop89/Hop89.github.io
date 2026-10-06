@@ -35,35 +35,64 @@ const featuredProjects = [
         "Result + trace",
       ],
       artifacts: [
+        { label: "Captured hardware trace (redacted)", detail: "Selected real GUI tool requests/results: discovery, three successful read-only actions, and rejected device ID. Unique hardware identifiers and unrelated fields omitted.", url: "/agentbridge-hardware-trace-redacted.txt" },
         { label: "Firmware SDK and protocol", detail: "Public implementation of the serial message protocol for Arduino and MicroPython.", url: "https://github.com/Hop89/agentbridge-firmware-sdk" },
         { label: "Example firmware implementations", detail: "Public SDK example programs and device integrations.", url: "https://github.com/Hop89/agentbridge-firmware-sdk/tree/main/examples" },
-        { label: "Host framework", detail: "The main source repository and hardware traces remain private; the response shown above is a documented format, not a recorded test." },
+        { label: "Main runtime", detail: "The host-side repository remains private. The linked trace shows selected observed behavior, not the complete source or raw log." },
       ],
       outputExample: {
-        kicker: "Documented response schema",
-        title: "What an action result looks like",
-        command: "device=flipper.zero.cli  capability=system.uptime",
+        kicker: "Real GUI trace · October 2026",
+        heading: "Discovery and safe execution",
+        title: "Flipper Zero: actual actions and boundary rejection",
+        toolCalls: true,
+        command: `list_devices {}
+list_capabilities {"device_id":"flipper.zero.cli"}
+run_sequence (device.info, system.uptime, cli.help)`,
+        output: `list_devices → 1 USB-serial Flipper Zero
+device_id: flipper.zero.cli
+firmware: Momentum / mntm-dev
+capabilities listed: 18
+
+run_sequence → steps_completed: 3
+
+[0] device.info
+  success: true
+  hardware_model: Flipper Zero
+  firmware_version: mntm-dev
+
+[1] system.uptime
+  success: true
+  uptime: 0h48m19s
+
+[2] cli.help
+  success: true
+  output: Available commands: …
+`,
+        note: "Condensed from actual Live Trace tool results. Device identifiers beyond the public logical ID, request IDs, and unrelated command text are omitted. All three read-only actions returned success: true.",
+      },
+      secondExample: {
+        kicker: "Real GUI trace · scope test",
+        heading: "Blocked out-of-scope request",
+        title: "Invalid device ID rejected",
+        toolCalls: true,
+        command: `run_action
+{"device_id":"portfolio-test-not-selected",
+ "capability":"cli.help"}`,
         output: `{
-  "request_id": "req_123",
-  "status": "completed",
-  "result": {
-    "device_id": "flipper.zero.cli",
-    "capability": "system.uptime",
-    "success": true,
-    "output": {
-      "uptime_seconds": 12345
-    }
+  "error": {
+    "code": "tool_execution_failed",
+    "message": "Device 'portfolio-test-not-selected' is not allowed."
   }
 }`,
-        note: "Illustrative response from the design documentation—not a captured hardware run or proof of test success. The actual CLI and GUI can run safe read-only capabilities.",
+        note: "Exact rejection from the captured run. This proves that this unselected ID was rejected; it does not by itself test a restricted/dangerous capability or isolation between two real devices.",
       },
-      evidenceStatus: "Documented interface · hardware demo not published",
-      evidenceIntro: "A concrete illustration of the policy-gated result structure. It is not a recorded test: the hardware project is operated locally and its main repository is private.",
+      evidenceStatus: "Captured on hardware · 3 successful actions + 1 rejection",
+      evidenceIntro: "A live OpenAI agent discovered the USB-connected Flipper Zero, inspected 18 capabilities, completed three safe read-only requests, and received an explicit error on an out-of-scope device ID. Results are a sanitized excerpt, not simulated output.",
       caseStudy: {
         title: "Enforcing device scope twice",
         problem: "Filtering the agent's visible device list was not enough to guarantee isolation at execution time.",
         change: "I added allowed-device checks inside the runtime's device lookup, so a request for another device is rejected even when the registry is refreshed.",
-        proof: "Recorded in the May 4 device-scoping implementation and follow-up fix.",
+        proof: "The linked October GUI trace captures an actual out-of-scope rejection. The May development history documents enforcement at the device lookup boundary.",
       },
       milestones: [
         { sha: "422f827f6a20ece3cb4fbc7c839741370ee7b0fd", title: "Initial operator interfaces", detail: "CLI and local GUI added on top of the adapter layer." },
@@ -751,7 +780,7 @@ function ExampleOutput({ example }) {
         <div className="terminal-command">
           {example.command.split("\n").map((line) => (
             <div key={line}>
-              <span className="terminal-prompt">{example.kicker === "Documented response schema" ? "›" : "$"}</span> {line}
+              <span className="terminal-prompt">{example.toolCalls || example.kicker === "Documented response schema" ? "›" : "$"}</span> {line}
             </div>
           ))}
         </div>
