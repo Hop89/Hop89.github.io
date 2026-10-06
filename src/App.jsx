@@ -767,7 +767,7 @@ function ExampleOutput({ example }) {
           <span className="mini-label">{example.kicker}</span>
           <h3>{example.heading || (example.kicker === "Documented response schema" ? "Illustrative JSON response" : "Local CLI output")}</h3>
         </div>
-        <span className="example-output-badge">CLI / output</span>
+        <span className="example-output-badge">{example.toolCalls ? "Agent trace" : "CLI / output"}</span>
       </div>
 
       <div className="terminal-window">
@@ -775,7 +775,7 @@ function ExampleOutput({ example }) {
           <span />
           <span />
           <span />
-          <strong>example output</strong>
+          <strong>{example.toolCalls ? "captured agent tools" : "example output"}</strong>
         </div>
         <div className="terminal-command">
           {example.command.split("\n").map((line) => (
