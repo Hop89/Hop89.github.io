@@ -17,7 +17,7 @@ const featuredProjects = [
       iteration:
         "As testing exposed edge cases, I moved more safeguards into the execution boundary: device scoping, sequence caps, cancellation, endpoint protection, and stricter firmware identification.",
       current:
-        "The current system supports OpenAI and Ollama agents, multiple hardware adapters, trust levels, live traces, firmware tooling, and a public firmware SDK.",
+        "The current system supports OpenAI and Ollama hardware agents, trust levels, device traces, a firmware SDK, and natural-language adapter generation with saved PlatformIO projects and manifests.",
       future:
         "Next I want to add persistent approval workflows, a cleaner versioned API, and better workflow-level tracking so multi-step agent runs are easier to audit and resume.",
       learned:
@@ -37,6 +37,7 @@ const featuredProjects = [
       artifacts: [
         { label: "Captured hardware trace (redacted)", detail: "Selected real GUI tool requests/results: discovery, three successful read-only actions, and rejected device ID. Unique hardware identifiers and unrelated fields omitted.", url: "/agentbridge-hardware-trace-redacted.txt" },
         { label: "Firmware SDK and protocol", detail: "Public implementation of the serial message protocol for Arduino and MicroPython.", url: "https://github.com/Hop89/agentbridge-firmware-sdk" },
+        { label: "Firmware generation reference", detail: "Public example firmware showing the SDK interface used by AI-created adapters (not a captured generation).", url: "https://github.com/Hop89/agentbridge-firmware-sdk/tree/main/examples/arduino_minimal" },
         { label: "Example firmware implementations", detail: "Public SDK example programs and device integrations.", url: "https://github.com/Hop89/agentbridge-firmware-sdk/tree/main/examples" },
         { label: "Main runtime", detail: "The host-side repository remains private. The linked trace shows selected observed behavior, not the complete source or raw log." },
       ],
@@ -88,6 +89,36 @@ run_sequence → steps_completed: 3
       },
       evidenceStatus: "Captured on hardware · 3 successful actions + 1 rejection",
       evidenceIntro: "A live OpenAI agent discovered the USB-connected Flipper Zero, inspected 18 capabilities, completed three safe read-only requests, and received an explicit error on an out-of-scope device ID. Results are a sanitized excerpt, not simulated output.",
+      firmwareGenerator: {
+        label: "Natural-language adapter generation",
+        summary: "A hardware description becomes a saved PlatformIO firmware project and reusable adapter manifest. AgentBridge guides the model with its firmware SDK, supported capabilities, permissions, and any known board information.",
+        exampleCommand: 'agentbridge adapter create "ESP32 with DHT22 on GPIO4. Expose device.ping, sensor.temperature, and sensor.humidity as safe capabilities." --board esp32 --name "DHT22 Sensor Node" --output ./firmware-demo',
+        sourceFiles: [
+          { path: "src/main.cpp", detail: "Generated C++ handlers and device identity" },
+          { path: "platformio.ini", detail: "Board configuration and SDK dependencies" },
+          { path: "adapter manifest", detail: "Adapter identity, connection metadata, and saved firmware path" },
+        ],
+        exampleCode: `#include <AgentBridge.h>
+AgentBridge ab;
+
+void setup() {
+  Serial.begin(115200);
+  // Register device identity and capabilities
+  ab.begin({ /* device details */ });
+
+  ab.capability("device.ping",
+    "Return a liveness response.", "safe",
+    [](JsonObjectConst, JsonObject out) {
+      out["pong"] = true;
+      return true;
+    });
+}
+
+void loop() { ab.loop(); }`,
+        codeNote: "Excerpt adapted from the public, hand-written Arduino SDK example to show the actual API the generator targets. This is not claimed as captured model-generated firmware.",
+        verifiedNote: "The CLI and GUI both implement this generation path and save projects and manifests. An actual generated output bundle, compilation log, and post-flash device probe are not included here yet.",
+        url: "https://github.com/Hop89/agentbridge-firmware-sdk/tree/main/examples/arduino_minimal",
+      },
       caseStudy: {
         title: "Enforcing device scope twice",
         problem: "Filtering the agent's visible device list was not enough to guarantee isolation at execution time.",
@@ -826,6 +857,51 @@ function ProjectProof({ project }) {
   );
 }
 
+function FirmwareGeneratorProof({ generator }) {
+  return (
+    <section className="firmware-proof" aria-label="Firmware generation workflow">
+      <div className="firmware-proof-head">
+        <div>
+          <p className="section-kicker">Additional capability</p>
+          <h2>Firmware generation from a hardware description</h2>
+        </div>
+        <span className="proof-status">Implemented workflow · example request</span>
+      </div>
+      <p className="proof-intro">{generator.summary}</p>
+      <div className="firmware-proof-flow" aria-label="Firmware generation steps">
+        <div><span>01</span><strong>Describe hardware</strong><small>Device, peripherals, and intended capabilities</small></div>
+        <span className="firmware-flow-arrow" aria-hidden="true">→</span>
+        <div><span>02</span><strong>Generate files</strong><small>SDK-based C++ and PlatformIO configuration</small></div>
+        <span className="firmware-flow-arrow" aria-hidden="true">→</span>
+        <div><span>03</span><strong>Save and inspect</strong><small>Source files and adapter manifest, then optional flash/probe</small></div>
+      </div>
+      <div className="firmware-proof-grid">
+        <article className="firmware-proof-panel">
+          <span className="mini-label">Reproducible example request — not a recorded run</span>
+          <pre className="firmware-command">{generator.exampleCommand}</pre>
+          <p className="firmware-panel-label">Generated project structure</p>
+          <div className="firmware-files">
+            {generator.sourceFiles.map((item) => (
+              <div key={item.path}>
+                <code>{item.path}</code><span>{item.detail}</span>
+              </div>
+            ))}
+          </div>
+        </article>
+        <article className="firmware-proof-panel">
+          <span className="mini-label">Actual public SDK reference</span>
+          <pre className="firmware-code">{generator.exampleCode}</pre>
+          <p>{generator.codeNote}</p>
+          <a className="firmware-source-link" href={generator.url} target="_blank" rel="noreferrer">
+            View complete SDK example ↗
+          </a>
+        </article>
+      </div>
+      <p className="firmware-validation">{generator.verifiedNote}</p>
+    </section>
+  );
+}
+
 function ProjectDetail({ project }) {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "auto" });
@@ -846,6 +922,9 @@ function ProjectDetail({ project }) {
         </section>
 
         <ProjectProof project={project} />
+        {project.firmwareGenerator ? (
+          <FirmwareGeneratorProof generator={project.firmwareGenerator} />
+        ) : null}
 
         <section className="project-overview-grid">
           <div className="overview-left">
