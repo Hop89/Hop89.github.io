@@ -1,0 +1,134 @@
+AGENT BRIDGE — REDACTED HARDWARE EXECUTION TRACE
+Provided by project author: October 6, 2026
+Source: AgentBridge GUI Live Trace, local hardware session
+Test: OpenAI gpt-4o, GUI trust level: Safe
+Connected device: Flipper Zero (USB serial), Momentum firmware
+Status: Complete
+
+This is a selected, transcribed excerpt of a genuine run. It omits the
+operator's prompt, API-key field, request IDs, hardware UID, radio/BLE MAC,
+hardware nickname, full capability descriptors, and lengthy CLI help output.
+Omissions are marked below. No output is fabricated. The run proves
+successful safe hardware reads and rejection of an out-of-scope device ID;
+it does NOT independently prove the blocking of restricted/dangerous
+capabilities or isolation between two real attached devices.
+
+01  TOOL REQUEST: list_devices
+    arguments: {}
+
+    TOOL RESULT:
+    {
+      "available_devices": [
+        {
+          "adapter_kind": "flipper_cli",
+          "capability_count": 18,
+          "device_id": "flipper.zero.cli",
+          "device_type": "flipper_zero",
+          "label": "Flipper Zero CLI",
+          "connection": {"transport_family": "usb_serial"},
+          "summary": {
+            "hardware_model": "Flipper Zero",
+            "firmware_origin_fork": "Momentum",
+            "firmware_version": "mntm-dev"
+          }
+        }
+      ],
+      "unavailable_candidates": []
+    }
+
+02  TOOL REQUEST: list_capabilities
+    arguments: {"device_id": "flipper.zero.cli"}
+
+    SELECTED TOOL RESULT:
+    "available_capabilities": [
+      "cli.help",
+      "device.info",
+      "system.uptime",
+      "subghz.frequency_analyzer",
+      "subghz.read",
+      "subghz.read_raw",
+      "subghz.transmit",
+      "infrared.receive",
+      "infrared.transmit",
+      "nfc.read",
+      "nfc.emulate",
+      "rfid.read",
+      "rfid.emulate",
+      "ibutton.read",
+      "ibutton.emulate",
+      "badusb.run",
+      "gpio.uart",
+      "gpio.write"
+    ]
+    Permitted safe read-only options in this test:
+    cli.help, device.info, system.uptime
+    [Per-capability descriptors and metadata omitted.]
+
+03  TOOL REQUEST: run_sequence
+    arguments:
+    {
+      "steps": [
+        {"capability": "device.info",   "device_id": "flipper.zero.cli"},
+        {"capability": "system.uptime", "device_id": "flipper.zero.cli"},
+        {"capability": "cli.help",      "device_id": "flipper.zero.cli"}
+      ]
+    }
+
+    TOOL RESULT: 3 of 3 steps completed
+
+    Step 0  device.info
+      "success": true
+      "error": null
+      "metadata": {"adapter": "flipper_cli"}
+      "output": {
+        "command": "device_info",
+        "parsed": {
+          "hardware_model": "Flipper Zero",
+          "firmware_version": "mntm-dev",
+          "firmware_origin_fork": "Momentum",
+          "firmware_commit": "c176524f"
+        }
+      }
+      [Hardware UID, radio addresses and remaining metadata omitted.]
+
+    Step 1  system.uptime
+      "success": true
+      "error": null
+      "metadata": {"adapter": "flipper_cli"}
+      "output": {
+        "command": "uptime",
+        "parsed": {"uptime": "0h48m19s"},
+        "text": "Uptime: 0h48m19s"
+      }
+
+    Step 2  cli.help
+      "success": true
+      "error": null
+      "metadata": {"adapter": "flipper_cli"}
+      "output": {
+        "command": "?",
+        "text": "Available commands: [full listing omitted]"
+      }
+    [Tool request IDs omitted.]
+
+04  TOOL REQUEST: run_action
+    arguments:
+    {
+      "capability": "cli.help",
+      "device_id": "portfolio-test-not-selected"
+    }
+
+    TOOL RESULT:
+    {
+      "error": {
+        "code": "tool_execution_failed",
+        "message": "Device 'portfolio-test-not-selected' is not allowed."
+      }
+    }
+
+OBSERVED OUTCOME
+- One device discovered; 18 capabilities listed.
+- Three read-only hardware actions completed successfully.
+- An invalid, unselected device ID was explicitly rejected.
+- The negative test is device-scoping behavior, not a test of
+  dangerous-capability policy or a multi-device isolation scenario.
