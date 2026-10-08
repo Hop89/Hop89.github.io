@@ -1942,12 +1942,12 @@ a.commit-row:hover {
 
 /* Focused admissions homepage */
 .home-hero {
-  min-height: 64vh;
+  min-height: 42vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 76px 0 62px;
-  max-width: 940px;
+  padding: 54px 0 48px;
+  max-width: 760px;
 }
 .home-hero h1 {
   max-width: 15ch;
@@ -1995,6 +1995,6 @@ a.commit-row:hover {
   .home-closing h2 { max-width: 18ch; }
 }
 @media (max-width: 560px) {
-  .home-hero { min-height: auto; padding: 58px 0 48px; }
+  .home-hero { min-height: auto; padding: 44px 0 40px; }
   .home-hero h1 { font-size: clamp(2.25rem, 12vw, 3.5rem); }
 }
