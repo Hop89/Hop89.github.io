@@ -991,7 +991,7 @@ function Home() {
       <main id="top">
         <section className="home-hero" id="about">
           <p className="eyebrow">Engineering portfolio</p>
-          <h1>I build systems where software has to interact with the real world.</h1>
+          <h1>Building systems where software interacts with the real world</h1>
           <p className="home-hero-copy">
             I am most interested in the boundary between software, hardware, and
             security: how a program discovers a device, decides what it should be
