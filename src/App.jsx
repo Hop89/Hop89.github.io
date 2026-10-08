@@ -9,23 +9,23 @@ const featuredProjects = [
       repo: "Hop89/AgentBridge",
       repoVisibility: "private",
       description:
-        "A capability-based framework that lets AI agents interact with real hardware through a controlled execution layer instead of raw device access.",
+        "A framework that lets AI agents control real hardware through typed capabilities, permission checks, and device adapters.",
       problem:
-        "AI-generated commands should not have unrestricted access to physical devices. I built a capability interface that lets models request actions while host-side code controls authorization and execution.",
+        "I wanted AI models to control hardware without giving them raw access to a device. Agent Bridge lets the model request an action while the host decides whether it is allowed and handles execution.",
       design:
-        "I separated planning from execution: agents request typed capabilities, while AgentBridge handles discovery, policy, hardware access, and logging.",
+        "I split the system into discovery, policy, execution, and device adapters so the model never talks directly to the hardware.",
       iteration:
-        "As testing exposed edge cases, I moved more safeguards into the execution boundary: device scoping, sequence caps, cancellation, endpoint protection, and stricter firmware identification.",
+        "Testing pushed more safeguards into the runtime, including device scoping, sequence limits, cancellation, endpoint protection, and stricter device identification.",
       current:
-        "The current system supports OpenAI and Ollama hardware agents, trust levels, device traces, a firmware SDK, and natural-language adapter generation with saved PlatformIO projects and manifests.",
+        "It currently supports OpenAI and Ollama agents, multiple device adapters, trust levels, live traces, a firmware SDK, and AI-generated firmware projects.",
       future:
-        "Next I want to add persistent approval workflows, a cleaner versioned API, and better workflow-level tracking so multi-step agent runs are easier to audit and resume.",
+        "Next I want to improve approvals and make multi-step runs easier to track and resume.",
       learned:
-        "I learned to treat a model as an untrusted planner: the critical protections belong in host code, not in instructions the model might ignore.",
+        "I learned that the model should be the planner, not the security boundary. The important restrictions need to be enforced by the host.",
       contribution:
-        "I chose typed device capabilities and deterministic policy checks over giving models raw serial access. This adds a layer of implementation work for each adapter, but makes access limits enforceable independently of the model and keeps action traces consistent.",
+        "I built Agent Bridge around typed capabilities instead of raw serial commands. It takes more adapter work, but it keeps permissions and results consistent across devices.",
       diagramType: "loop",
-      loopCaption: "Results and live traces return to the agent, which can decide on the next permitted action.",
+      loopCaption: "Results return to the agent, which can decide what permitted action to take next.",
       architecture: [
         "AI provider",
         "Tool request",
@@ -35,11 +35,11 @@ const featuredProjects = [
         "Result + trace",
       ],
       artifacts: [
-        { label: "Captured hardware trace (redacted)", detail: "Selected real GUI tool requests/results: discovery, three successful read-only actions, and rejected device ID. Unique hardware identifiers and unrelated fields omitted.", url: "/agentbridge-hardware-trace-redacted.txt" },
-        { label: "Firmware SDK and protocol", detail: "Public implementation of the serial message protocol for Arduino and MicroPython.", url: "https://github.com/Hop89/agentbridge-firmware-sdk" },
-        { label: "Firmware generation reference", detail: "Public example firmware showing the SDK interface used by AI-created adapters (not a captured generation).", url: "https://github.com/Hop89/agentbridge-firmware-sdk/tree/main/examples/arduino_minimal" },
-        { label: "Example firmware implementations", detail: "Public SDK example programs and device integrations.", url: "https://github.com/Hop89/agentbridge-firmware-sdk/tree/main/examples" },
-        { label: "Main runtime", detail: "The host-side repository remains private. The linked trace shows selected observed behavior, not the complete source or raw log." },
+        { label: "Captured hardware trace (redacted)", detail: "Real GUI trace showing device discovery, three read-only actions, and a rejected device ID.", url: "/agentbridge-hardware-trace-redacted.txt" },
+        { label: "Firmware SDK and protocol", detail: "Public Arduino and MicroPython implementation of the Agent Bridge serial protocol.", url: "https://github.com/Hop89/agentbridge-firmware-sdk" },
+        { label: "Firmware generation reference", detail: "Public example showing the API used by generated firmware.", url: "https://github.com/Hop89/agentbridge-firmware-sdk/tree/main/examples/arduino_minimal" },
+        { label: "Example firmware implementations", detail: "Arduino and MicroPython examples built with the SDK.", url: "https://github.com/Hop89/agentbridge-firmware-sdk/tree/main/examples" },
+        { label: "Main runtime", detail: "The main host runtime is private; the public artifacts show the protocol and captured behavior." },
       ],
       outputExample: {
         kicker: "Real GUI trace · October 2026",
@@ -86,10 +86,10 @@ run_sequence → steps_completed: 3
 }`,
       },
       evidenceStatus: "Captured on hardware · 3 successful actions + 1 rejection",
-      evidenceIntro: "A live OpenAI agent discovered the USB-connected Flipper Zero, inspected 18 capabilities, completed three safe read-only requests, and received an explicit error on an out-of-scope device ID. Results are a sanitized excerpt, not simulated output.",
+      evidenceIntro: "In this run, an OpenAI agent found a USB-connected Flipper Zero, listed 18 capabilities, completed three read-only actions, and was blocked from using an unselected device ID.",
       firmwareGenerator: {
         label: "Natural-language adapter generation",
-        summary: "A hardware description becomes a saved PlatformIO firmware project and reusable adapter manifest. AgentBridge guides the model with its firmware SDK, supported capabilities, permissions, and any known board information.",
+        summary: "Agent Bridge can take a hardware description and generate a PlatformIO project plus an adapter manifest using the firmware SDK.",
         exampleCommand: 'agentbridge adapter create "ESP32 with DHT22 on GPIO4. Expose device.ping, sensor.temperature, and sensor.humidity as safe capabilities." --board esp32 --name "DHT22 Sensor Node" --output ./firmware-demo',
         sourceFiles: [
           { path: "src/main.cpp", detail: "Generated C++ handlers and device identity" },
@@ -113,15 +113,15 @@ void setup() {
 }
 
 void loop() { ab.loop(); }`,
-        codeNote: "Excerpt adapted from the public, hand-written Arduino SDK example to show the actual API the generator targets. This is not claimed as captured model-generated firmware.",
-        verifiedNote: "The CLI and GUI both implement this generation path and save projects and manifests. An actual generated output bundle, compilation log, and post-flash device probe are not included here yet.",
+        codeNote: "This excerpt comes from the public Arduino SDK example and shows the API the generator targets.",
+        verifiedNote: "The generator is implemented in both the CLI and GUI. I have not included a generated build or flash run here yet.",
         url: "https://github.com/Hop89/agentbridge-firmware-sdk/tree/main/examples/arduino_minimal",
       },
       caseStudy: {
         title: "Enforcing device scope twice",
-        problem: "Filtering the agent's visible device list was not enough to guarantee isolation at execution time.",
-        change: "I added allowed-device checks inside the runtime's device lookup, so a request for another device is rejected even when the registry is refreshed.",
-        proof: "The linked October GUI trace captures an actual out-of-scope rejection. The May development history documents enforcement at the device lookup boundary.",
+        problem: "Showing the agent only one device did not guarantee it could only execute on that device.",
+        change: "I added the same device-scope check inside runtime lookup, so out-of-scope requests are rejected even after a fresh scan.",
+        proof: "The October trace shows the rejection, and the May commit history shows the runtime change.",
       },
       milestones: [
         { sha: "422f827f6a20ece3cb4fbc7c839741370ee7b0fd", title: "Initial operator interfaces", detail: "CLI and local GUI added on top of the adapter layer." },
@@ -188,23 +188,23 @@ void loop() { ab.loop(); }`,
       repo: "Hop89/Perimeter",
       repoVisibility: "public",
       description:
-        "An Nmap-powered network analysis tool that turns raw scan results into prioritized risk information, readable reports, and historical security trends.",
+        "A network analysis tool built on Nmap that turns scan results into prioritized findings, saved reports, and trends over time.",
       problem:
-        "Nmap collects network information, but a port list alone cannot show which issues matter or what changed. Perimeter adds risk interpretation, per-host reports, and comparisons between scans.",
+        "Nmap gives a lot of raw network data, but I wanted a faster way to see what mattered and what changed between scans. Perimeter adds scoring, reports, and comparisons.",
       design:
-        "I split scanning, XML parsing, risk analysis, report storage, and trend comparison into separate modules so each stage could be tested independently.",
+        "I separated scanning, XML parsing, scoring, report storage, and trend comparison so I could test each part independently.",
       iteration:
-        "Perimeter grew from a scan wrapper into a reporting system: readable output, risk scoring, structured reports, then historical comparisons and trend analysis.",
+        "It started as an Nmap wrapper and grew into a reporting tool with risk scores, stored reports, and scan-to-scan comparisons.",
       current:
-        "It now scores findings, flags misconfigurations, stores reports by IP, compares scans over time, and outputs readable text or JSON.",
+        "It scores findings, flags common misconfigurations, stores reports by IP, compares scans, and outputs text or JSON.",
       future:
-        "Next I want to expose Perimeter through an API so agents or other systems can launch scans and consume structured results, with longer-term support for distributed monitoring nodes.",
+        "Next I want to add an API so other tools or agents can run scans and use the results.",
       learned:
-        "I learned that preserving structured, comparable evidence matters more than simply collecting more scan output.",
+        "I learned that keeping scan results structured and comparable was more useful than just collecting more output.",
       contribution:
-        "Rather than replace a mature scanner, I built on Nmap and separated the parser, deterministic scoring, storage, and comparison modules. Organizing reports by target IP made longitudinal analysis possible without mixing findings from different machines.",
+        "I kept Nmap as the scanner and built the analysis around it: parsing, scoring, storage, and comparison. Saving reports by target IP made it possible to track one system over time.",
       diagramType: "loop",
-      loopCaption: "Each later scan is compared with stored history, so the output informs what to investigate and scan again.",
+      loopCaption: "Each scan can be compared with saved reports to show what changed.",
       architecture: [
         "Target scan",
         "XML parser",
@@ -214,10 +214,10 @@ void loop() { ab.loop(); }`,
         "Next scan",
       ],
       artifacts: [
-        { label: "Source code", detail: "Public CLI, analysis pipeline, and development history.", url: "https://github.com/Hop89/Perimeter" },
-        { label: "Full project writeup", detail: "Original narrative, historical scan excerpt, and technical architecture.", url: "/perimeter-writeup.html" },
-        { label: "Trend comparison code", detail: "Implementation of changed, new, and resolved finding detection.", url: "https://github.com/Hop89/Perimeter/blob/main/src/perimeter/trend.py" },
-        { label: "Verification tests", detail: "Source tests for target-scoped reports, IPv6, and same-second report naming.", url: "https://github.com/Hop89/Perimeter/blob/main/tests/verification.py" },
+        { label: "Source code", detail: "Public CLI, analysis code, and development history.", url: "https://github.com/Hop89/Perimeter" },
+        { label: "Full project writeup", detail: "Project writeup with scan output and architecture.", url: "/perimeter-writeup.html" },
+        { label: "Trend comparison code", detail: "Code for detecting new, changed, and resolved findings.", url: "https://github.com/Hop89/Perimeter/blob/main/src/perimeter/trend.py" },
+        { label: "Verification tests", detail: "Tests for report scoping, IPv6, and filename collisions.", url: "https://github.com/Hop89/Perimeter/blob/main/tests/verification.py" },
       ],
       outputExample: {
         kicker: "Captured Oct 5, 2026",
@@ -270,12 +270,12 @@ Severity Trend:
   Low:      3 → 3 +0`,
       },
       evidenceStatus: "Two captured scans · Oct 2026",
-      evidenceIntro: "Two local scans of the same host produced six ranked findings each. The second saved report was compared against the first, correctly showing no observed change over 20 seconds.",
+      evidenceIntro: "Two scans of the same host produced six findings each. Perimeter stored both reports and correctly showed no change between them.",
       caseStudy: {
         title: "Avoiding mixed or overwritten reports",
-        problem: "Multi-host scan summaries were difficult to compare as one combined record, and report filenames could collide when two saves occurred in the same second.",
-        change: "Reports became target-specific and the file naming gained sub-second precision. The source tests check that reports stay scoped to one host and that same-second saves create distinct files.",
-        proof: "Automated verification cases in the public tests/verification.py file.",
+        problem: "Combined multi-host reports were hard to compare, and same-second filenames could overwrite each other.",
+        change: "I saved reports by target and added microseconds to filenames. Tests cover host scoping and filename collisions.",
+        proof: "Covered by the public verification tests.",
         url: "https://github.com/Hop89/Perimeter/blob/main/tests/verification.py",
       },
       milestones: [
@@ -801,7 +801,7 @@ function FirmwareGeneratorProof({ generator }) {
           <p className="section-kicker">Additional capability</p>
           <h2>Firmware generation from a hardware description</h2>
         </div>
-        <span className="proof-status">Implemented workflow · example request</span>
+        <span className="proof-status">Implemented · example request</span>
       </div>
       <p className="proof-intro">{generator.summary}</p>
       <div className="firmware-proof-flow" aria-label="Firmware generation steps">
@@ -809,11 +809,11 @@ function FirmwareGeneratorProof({ generator }) {
         <span className="firmware-flow-arrow" aria-hidden="true">→</span>
         <div><span>02</span><strong>Generate files</strong><small>SDK-based C++ and PlatformIO configuration</small></div>
         <span className="firmware-flow-arrow" aria-hidden="true">→</span>
-        <div><span>03</span><strong>Save and inspect</strong><small>Source files and adapter manifest, then optional flash/probe</small></div>
+        <div><span>03</span><strong>Save and inspect</strong><small>Source files and manifest, then optional flash/probe</small></div>
       </div>
       <div className="firmware-proof-grid">
         <article className="firmware-proof-panel">
-          <span className="mini-label">Reproducible example request — not a recorded run</span>
+          <span className="mini-label">Example request — not a recorded run</span>
           <pre className="firmware-command">{generator.exampleCommand}</pre>
           <p className="firmware-panel-label">Generated project structure</p>
           <div className="firmware-files">
@@ -825,7 +825,7 @@ function FirmwareGeneratorProof({ generator }) {
           </div>
         </article>
         <article className="firmware-proof-panel">
-          <span className="mini-label">Actual public SDK reference</span>
+          <span className="mini-label">Public SDK example</span>
           <pre className="firmware-code">{generator.exampleCode}</pre>
           <p>{generator.codeNote}</p>
           <a className="firmware-source-link" href={generator.url} target="_blank" rel="noreferrer">
@@ -989,16 +989,9 @@ function Home() {
           <p className="eyebrow">Engineering portfolio</p>
           <h1>Building systems where software interacts with the real world</h1>
           <p className="home-hero-copy">
-            I am most interested in the boundary between software, hardware, and
-            security: how a program discovers a device, decides what it should be
-            allowed to do, and turns low-level data into something useful. My recent
-            independent work has focused on AI-assisted hardware control and defensive
-            network analysis.
-          </p>
-          <p className="home-hero-copy home-hero-secondary">
-            These pages are less about polished final products than the engineering
-            behind them. I include real outputs, architecture decisions, debugging
-            cases, development history, and the limitations I still need to solve.
+            I like building projects that connect software to hardware and networks.
+            Most of my recent work has focused on AI-assisted hardware control and
+            network security, especially where reliability and access control matter.
           </p>
           <div className="hero-actions">
             <a className="button button-primary" href="#projects">View projects</a>
@@ -1018,9 +1011,8 @@ function Home() {
             <p className="section-kicker">Selected independent work</p>
             <h1>Featured projects</h1>
             <p>
-              Two projects that best represent how I approach systems engineering:
-              build a complete tool, test its boundaries, and keep enough evidence
-              to explain how it evolved.
+              These are the two independent projects I have spent the most time
+              building and testing.
             </p>
           </div>
 
@@ -1046,14 +1038,13 @@ function Home() {
         <section className="home-closing">
           <div>
             <p className="section-kicker">What connects the work</p>
-            <h2>Control, visibility, and useful abstractions.</h2>
+            <h2>Building around existing tools.</h2>
           </div>
           <p>
-            Agent Bridge asks how an AI system can interact with hardware without
-            receiving unrestricted control. Perimeter asks how raw network data can
-            become prioritized, comparable security information. Both started from the
-            same kind of question: what layer is missing between a powerful low-level
-            tool and a person trying to use it safely and effectively?
+            Both projects started with tools that could already do a lot, but were
+            missing a layer I wanted. Agent Bridge adds controlled hardware access for
+            AI models, while Perimeter turns Nmap output into prioritized reports and
+            comparisons over time.
           </p>
         </section>
       </main>
