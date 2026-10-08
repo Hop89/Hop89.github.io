@@ -1038,7 +1038,7 @@ function Home() {
         <section className="home-closing">
           <div>
             <p className="section-kicker">What connects the work</p>
-            <h2>Making powerful tools easier to control and understand.</h2>
+            <h2>Making powerful tools easier to control.</h2>
           </div>
           <p>
             Both projects started with tools that could already do a lot, but were
