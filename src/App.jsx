@@ -70,23 +70,8 @@ run_sequence → steps_completed: 3
   output: Available commands: …
 `,
       },
-      secondExample: {
-        kicker: "Real GUI trace · scope test",
-        heading: "Blocked out-of-scope request",
-        title: "Invalid device ID rejected",
-        toolCalls: true,
-        command: `run_action
-{"device_id":"portfolio-test-not-selected",
- "capability":"cli.help"}`,
-        output: `{
-  "error": {
-    "code": "tool_execution_failed",
-    "message": "Device 'portfolio-test-not-selected' is not allowed."
-  }
-}`,
-      },
-      evidenceStatus: "Captured on hardware · 3 successful actions + 1 rejection",
-      evidenceIntro: "In this run, an OpenAI agent found a USB-connected Flipper Zero, listed 18 capabilities, completed three read-only actions, and was blocked from using an unselected device ID.",
+      evidenceStatus: "Captured on hardware · 3 successful actions",
+      evidenceIntro: "In this run, an OpenAI agent found a USB-connected Flipper Zero, listed 18 capabilities, and completed three read-only actions.",
       firmwareGenerator: {
         label: "Natural-language adapter generation",
         summary: "Agent Bridge can take a hardware description and generate a PlatformIO project plus an adapter manifest using the firmware SDK.",
