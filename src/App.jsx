@@ -71,7 +71,6 @@ run_sequence → steps_completed: 3
 `,
       },
       evidenceStatus: "Captured on hardware · 3 successful actions",
-      evidenceIntro: "In this run, an OpenAI agent found a USB-connected Flipper Zero, listed 18 capabilities, and completed three read-only actions.",
       firmwareGenerator: {
         label: "Natural-language adapter generation",
         summary: "Agent Bridge can take a hardware description and generate a PlatformIO project plus an adapter manifest using the firmware SDK.",
@@ -98,7 +97,6 @@ void setup() {
 }
 
 void loop() { ab.loop(); }`,
-        codeNote: "This excerpt comes from the public Arduino SDK example and shows the API the generator targets.",
         url: "https://github.com/Hop89/agentbridge-firmware-sdk/tree/main/examples/arduino_minimal",
       },
       caseStudy: {
@@ -254,7 +252,6 @@ Severity Trend:
   Low:      3 → 3 +0`,
       },
       evidenceStatus: "Two captured scans · Oct 2026",
-      evidenceIntro: "Two scans of the same host produced six findings each. Perimeter stored both reports and correctly showed no change between them.",
       caseStudy: {
         title: "Avoiding mixed or overwritten reports",
         problem: "Combined multi-host reports were hard to compare, and same-second filenames could overwrite each other.",
@@ -486,11 +483,6 @@ function CommitTimeline({ project }) {
         </div>
       </details>
 
-      <p className="commit-note">
-        {project.repoVisibility === "public"
-          ? "This timeline refreshes from GitHub every five minutes while the page is open, so new public commits appear automatically."
-          : "This project repository is private, so the public portfolio uses a real commit snapshot. A public repository or token-backed endpoint would be required for live updates without exposing credentials."}
-      </p>
     </aside>
   );
 }
@@ -738,7 +730,6 @@ function ExampleOutput({ example }) {
         <pre className="terminal-output">{example.output}</pre>
       </div>
 
-      <p className="example-output-note">{example.note}</p>
     </article>
   );
 }
@@ -753,7 +744,6 @@ function ProjectProof({ project }) {
         </div>
         <span className="proof-status">{project.evidenceStatus}</span>
       </div>
-      <p className="proof-intro">{project.evidenceIntro}</p>
       {project.outputExample ? (
         <div className={project.secondExample ? "proof-examples-grid" : ""}>
           <ExampleOutput example={project.outputExample} />
@@ -811,7 +801,6 @@ function FirmwareGeneratorProof({ generator }) {
         <article className="firmware-proof-panel">
           <span className="mini-label">Public SDK example</span>
           <pre className="firmware-code">{generator.exampleCode}</pre>
-          <p>{generator.codeNote}</p>
           <a className="firmware-source-link" href={generator.url} target="_blank" rel="noreferrer">
             View complete SDK example ↗
           </a>
