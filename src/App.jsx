@@ -99,7 +99,6 @@ void setup() {
 
 void loop() { ab.loop(); }`,
         codeNote: "This excerpt comes from the public Arduino SDK example and shows the API the generator targets.",
-        verifiedNote: "The generator is implemented in both the CLI and GUI. I have not included a generated build or flash run here yet.",
         url: "https://github.com/Hop89/agentbridge-firmware-sdk/tree/main/examples/arduino_minimal",
       },
       caseStudy: {
@@ -818,7 +817,6 @@ function FirmwareGeneratorProof({ generator }) {
           </a>
         </article>
       </div>
-      <p className="firmware-validation">{generator.verifiedNote}</p>
     </section>
   );
 }
