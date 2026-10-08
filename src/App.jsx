@@ -69,7 +69,6 @@ run_sequence → steps_completed: 3
   success: true
   output: Available commands: …
 `,
-        note: "Condensed from actual Live Trace tool results. Device identifiers beyond the public logical ID, request IDs, and unrelated command text are omitted. All three read-only actions returned success: true.",
       },
       secondExample: {
         kicker: "Real GUI trace · scope test",
@@ -85,7 +84,6 @@ run_sequence → steps_completed: 3
     "message": "Device 'portfolio-test-not-selected' is not allowed."
   }
 }`,
-        note: "Exact rejection from the captured run. This proves that this unselected ID was rejected; it does not by itself test a restricted/dangerous capability or isolation between two real devices.",
       },
       evidenceStatus: "Captured on hardware · 3 successful actions + 1 rejection",
       evidenceIntro: "A live OpenAI agent discovered the USB-connected Flipper Zero, inspected 18 capabilities, completed three safe read-only requests, and received an explicit error on an out-of-scope device ID. Results are a sanitized excerpt, not simulated output.",
@@ -270,7 +268,6 @@ Severity Trend:
   High:     2 → 2 +0
   Medium:   0 → 0 +0
   Low:      3 → 3 +0`,
-        note: "Real results from two runs 20 seconds apart. The test confirms report persistence and a stable comparison; it does not demonstrate detection of new or resolved vulnerabilities. The installed local CLI supports --latest, but this option is absent from the currently published GitHub CLI source.",
       },
       evidenceStatus: "Two captured scans · Oct 2026",
       evidenceIntro: "Two local scans of the same host produced six ranked findings each. The second saved report was compared against the first, correctly showing no observed change over 20 seconds.",
