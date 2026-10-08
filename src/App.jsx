@@ -959,7 +959,6 @@ function Home() {
       <main id="top">
         <section className="home-hero" id="about">
           <p className="eyebrow">Engineering portfolio</p>
-          <h1>Building systems where software interacts with the real world</h1>
           <p className="home-hero-copy">
             I build tools that connect software to real systems. Most of my recent
             work has focused on AI-assisted hardware control and network security,
