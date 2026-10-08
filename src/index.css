@@ -1987,12 +1987,6 @@ a.commit-row:hover {
   font-size: clamp(1rem, 1.45vw, 1.12rem);
   line-height: 1.72;
 }
-.home-hero-secondary {
-  max-width: 720px;
-  margin-top: 12px;
-  color: #8996a9;
-  font-size: .96rem;
-}
 .projects-first {
   border-top: 1px solid rgba(255,255,255,.08);
 }
