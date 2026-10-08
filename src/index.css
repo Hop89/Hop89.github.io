@@ -869,14 +869,6 @@ a {
   line-height: 1.45;
 }
 
-.commit-note {
-  margin: 18px 0 0;
-  padding-top: 14px;
-  border-top: 1px solid rgba(255, 255, 255, 0.07);
-  color: #758195;
-  font-size: 0.78rem;
-  line-height: 1.5;
-}
 
 .compact-section {
   padding: 38px 0;
@@ -1564,12 +1556,6 @@ a.commit-row:hover {
   white-space: pre;
 }
 
-.example-output-note {
-  margin: 10px 0 0;
-  color: #718096;
-  font-size: 0.76rem;
-  line-height: 1.5;
-}
 
 @media (max-width: 680px) {
   .example-output-heading {
@@ -1670,9 +1656,7 @@ a.commit-row:hover {
   line-height: 1.65;
 }
 
-.project-proof .example-output-note {
-  font-size: 0.81rem;
-}
+.project-proof 
 
 .map-proof {
   overflow: hidden;
@@ -1944,13 +1928,6 @@ a.commit-row:hover {
   font-weight: 700;
 }
 .firmware-source-link:hover { text-decoration: underline; }
-.firmware-validation {
-  max-width: 850px;
-  margin: 16px 0 0;
-  font-size: .78rem;
-  color: var(--muted);
-  line-height: 1.6;
-}
 @media (max-width: 800px) {
   .firmware-proof-grid { grid-template-columns: 1fr; }
 }
