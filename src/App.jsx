@@ -306,7 +306,6 @@ function Header() {
           Grady May
         </a>
         <nav className="nav-links" aria-label="Primary navigation">
-          <a href="#about">About</a>
           <a href="#projects">Projects</a>
           <a href="https://github.com/Hop89" target="_blank" rel="noreferrer">
             GitHub
@@ -957,25 +956,6 @@ function Home() {
   return (
     <div className="site-shell">
       <main id="top">
-        <section className="home-hero" id="about">
-          <p className="home-hero-copy">
-            I build tools that connect software to real systems. Most of my recent
-            work has focused on AI-assisted hardware control and network security,
-            especially where reliability and access control matter.
-          </p>
-          <div className="hero-actions">
-            <a className="button button-primary" href="#projects">View projects</a>
-            <a
-              className="button button-secondary"
-              href="https://github.com/Hop89"
-              target="_blank"
-              rel="noreferrer"
-            >
-              GitHub ↗
-            </a>
-          </div>
-        </section>
-
         <section className="section projects-first" id="projects">
           <div className="section-heading">
             <p className="section-kicker">Selected independent work</p>
@@ -1011,11 +991,13 @@ function Home() {
             <h2>Making powerful tools easier to control.</h2>
           </div>
           <p>
-            Both projects started with tools that could already do a lot, but were
-            missing a layer I wanted. Perimeter turns Nmap output into prioritized
-            reports and comparisons over time. Agent Bridge creates a controlled layer
-            between AI models and hardware, and is designed to work across different
-            devices, capabilities, and interfaces instead of one specific use case.
+            I build tools that connect software to real systems, mostly around
+            AI-assisted hardware control and network security. Both projects started
+            with tools that could already do a lot, but were missing a layer I wanted.
+            Perimeter turns Nmap output into prioritized reports and comparisons over
+            time. Agent Bridge creates a controlled layer between AI models and
+            hardware, and is designed to work across different devices, capabilities,
+            and interfaces instead of one specific use case.
           </p>
         </section>
       </main>
