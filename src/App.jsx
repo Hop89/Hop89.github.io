@@ -23,7 +23,7 @@ const featuredProjects = [
       learned:
         "I learned that the model should be the planner, not the security boundary. The important restrictions need to be enforced by the host.",
       contribution:
-        "I built Agent Bridge around typed capabilities instead of raw serial commands. That makes the same system usable across different hardware while keeping permissions and results consistent."
+        "I built Agent Bridge around typed capabilities instead of raw serial commands. That makes the same system usable across different hardware while keeping permissions and results consistent.",
       diagramType: "loop",
       loopCaption: "Results return to the agent, which can decide what permitted action to take next.",
       architecture: [
