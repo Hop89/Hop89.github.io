@@ -1017,34 +1017,6 @@ function Home() {
           </div>
         </section>
 
-        <section className="home-principles" aria-label="Engineering focus">
-          <article>
-            <span className="mini-label">Systems</span>
-            <h2>Build the whole path</h2>
-            <p>
-              I like projects that cross boundaries: models, APIs, protocols,
-              hardware adapters, storage, and the interfaces that connect them.
-            </p>
-          </article>
-          <article>
-            <span className="mini-label">Reliability</span>
-            <h2>Design around failure</h2>
-            <p>
-              I try to move important guarantees into code that can be tested:
-              permission checks, structured results, persistent reports, and clear
-              execution boundaries.
-            </p>
-          </article>
-          <article>
-            <span className="mini-label">Iteration</span>
-            <h2>Keep the evidence</h2>
-            <p>
-              The portfolio includes captured runs, tests, commit history, and
-              specific redesigns so the process is visible alongside the result.
-            </p>
-          </article>
-        </section>
-
         <section className="section projects-first" id="projects">
           <div className="section-heading">
             <p className="section-kicker">Selected independent work</p>
