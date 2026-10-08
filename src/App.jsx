@@ -44,7 +44,7 @@ const featuredProjects = [
       outputExample: {
         kicker: "Real GUI trace · October 2026",
         heading: "Discovery and safe execution",
-        title: "Flipper Zero: actual actions and boundary rejection",
+        title: "Hardware execution trace",
         toolCalls: true,
         command: `list_devices {}
 list_capabilities {"device_id":"flipper.zero.cli"}
