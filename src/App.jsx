@@ -246,7 +246,6 @@ Top Findings:
 [LOW 35] 10.33.4.52 5800/tcp vnc-http
 
 Reports stored for 1 IP(s)`,
-        note: "Transcribed from a real local CLI run. Rationale text is shortened in this preview; the original trace and writeup contain the full messages. These are risk heuristics, not confirmation of exploitable vulnerabilities.",
       },
       secondExample: {
         kicker: "Captured Oct 5, 2026",
