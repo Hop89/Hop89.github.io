@@ -9,7 +9,7 @@ const featuredProjects = [
       repo: "Hop89/AgentBridge",
       repoVisibility: "private",
       description:
-        "A framework that lets AI agents control real hardware through typed capabilities, permission checks, and device adapters.",
+        "A framework that lets AI agents control different kinds of hardware through typed capabilities, permission checks, and reusable device adapters.",
       problem:
         "I wanted AI models to control hardware without giving them raw access to a device. Agent Bridge lets the model request an action while the host decides whether it is allowed and handles execution.",
       design:
@@ -17,13 +17,13 @@ const featuredProjects = [
       iteration:
         "Testing pushed more safeguards into the runtime, including device scoping, sequence limits, cancellation, endpoint protection, and stricter device identification.",
       current:
-        "It currently supports OpenAI and Ollama agents, multiple device adapters, trust levels, live traces, a firmware SDK, and AI-generated firmware projects.",
+        "It currently supports OpenAI and Ollama agents, multiple hardware adapters, trust levels, live traces, a firmware SDK, and generated firmware for new devices.",
       future:
         "Next I want to improve approvals and make multi-step runs easier to track and resume.",
       learned:
         "I learned that the model should be the planner, not the security boundary. The important restrictions need to be enforced by the host.",
       contribution:
-        "I built Agent Bridge around typed capabilities instead of raw serial commands. It takes more adapter work, but it keeps permissions and results consistent across devices.",
+        "I built Agent Bridge around typed capabilities instead of raw serial commands. That makes the same system usable across different hardware while keeping permissions and results consistent."
       diagramType: "loop",
       loopCaption: "Results return to the agent, which can decide what permitted action to take next.",
       architecture: [
@@ -961,9 +961,9 @@ function Home() {
           <p className="eyebrow">Engineering portfolio</p>
           <h1>Building systems where software interacts with the real world</h1>
           <p className="home-hero-copy">
-            I like building projects that connect software to hardware and networks.
-            Most of my recent work has focused on AI-assisted hardware control and
-            network security, especially where reliability and access control matter.
+            I build tools that connect software to real systems. Most of my recent
+            work has focused on AI-assisted hardware control and network security,
+            especially where reliability and access control matter.
           </p>
           <div className="hero-actions">
             <a className="button button-primary" href="#projects">View projects</a>
@@ -1014,9 +1014,10 @@ function Home() {
           </div>
           <p>
             Both projects started with tools that could already do a lot, but were
-            missing a layer I wanted. Agent Bridge adds controlled hardware access for
-            AI models, while Perimeter turns Nmap output into prioritized reports and
-            comparisons over time.
+            missing a layer I wanted. Perimeter turns Nmap output into prioritized
+            reports and comparisons over time. Agent Bridge creates a controlled layer
+            between AI models and hardware, and is designed to work across different
+            devices, capabilities, and interfaces instead of one specific use case.
           </p>
         </section>
       </main>
