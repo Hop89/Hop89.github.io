@@ -299,6 +299,17 @@ function useHash() {
 }
 
 function Header() {
+  const openEmail = () => {
+    const address = [
+      109, 97, 121, 103, 114, 97, 100, 121, 54, 50,
+      64, 103, 109, 97, 105, 108, 46, 99, 111, 109,
+    ]
+      .map((code) => String.fromCharCode(code))
+      .join("");
+
+    window.location.href = "mailto:" + address;
+  };
+
   return (
     <header className="site-header">
       <div className="header-inner">
@@ -310,6 +321,9 @@ function Header() {
           <a href="https://github.com/Hop89" target="_blank" rel="noreferrer">
             GitHub
           </a>
+          <button type="button" onClick={openEmail} aria-label="Email Grady May">
+            Email
+          </button>
         </nav>
       </div>
     </header>
